@@ -4,17 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Meeting Portal</title>
-  
-  <!-- Select2 & jQuery CSS/JS -->
+  <!-- Select2 CSS for Searchable Referral Dropdown -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    
+    * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
     body {
-      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 50%, #be185d 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,268 +20,142 @@
       margin: 0;
       padding: 15px;
     }
-
     .card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(12px);
-      padding: 25px 22px;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 25px 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       width: 100%;
-      max-width: 450px;
-      animation: fadeIn 0.6s ease-in-out;
-      position: relative;
+      max-width: 440px;
+      animation: fadeIn 0.8s ease-in-out;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-15px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .brand-title {
       text-align: center;
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 800;
-      background: linear-gradient(45deg, #e11d48, #f97316);
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 3px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
     .brand-subtitle {
       text-align: center;
       font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    /* Countdown Timer Box */
-    .countdown-box {
-      background: linear-gradient(135deg, #059669, #10b981);
-      color: white;
-      padding: 14px 10px;
-      border-radius: 12px;
-      text-align: center;
+      color: #666;
       margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      font-weight: 500;
     }
-
-    .countdown-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      opacity: 0.95;
-    }
-
-    .countdown-timer {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      font-family: monospace;
-    }
-
-    .meeting-info-sub {
-      font-size: 11px;
-      margin-top: 4px;
-      opacity: 0.9;
-    }
-
-    /* Notice Banner Feature */
     .notice-banner {
-      background: #fffbebf5;
-      border: 1px solid #fcd34d;
-      color: #b45309;
-      padding: 10px 12px;
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      color: #856404;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .countdown-box {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      padding: 10px;
       border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
       text-align: center;
       margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
+    .countdown-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .countdown-timer {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
     .tabs {
       display: flex;
       margin-bottom: 15px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 2px solid #eee;
     }
-
     .tab-btn {
       flex: 1;
-      padding: 11px;
+      padding: 10px;
       border: none;
       background: none;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: bold;
       cursor: pointer;
-      color: #6b7280;
+      color: #888;
       transition: all 0.3s ease;
     }
-
     .tab-btn.active {
-      color: #e11d48;
-      border-bottom: 3px solid #e11d48;
+      color: #ff416c;
+      border-bottom: 3px solid #ff416c;
     }
-
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       font-weight: 600;
-      color: #374151;
+      color: #444;
       font-size: 13px;
     }
-
     input, select {
       width: 100%;
-      padding: 11px;
-      border: 1px solid #d1d5db;
+      padding: 10px;
+      border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 14px;
       outline: none;
-      transition: all 0.2s ease;
     }
-
     input:focus, select:focus {
-      border-color: #e11d48;
-      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
+      border-color: #ff416c;
+      box-shadow: 0 0 5px rgba(255, 65, 108, 0.3);
     }
-
     button.btn-submit {
       width: 100%;
-      background: linear-gradient(45deg, #e11d48, #f97316);
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
       color: #fff;
       border: none;
-      padding: 13px;
-      font-size: 16px;
-      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 700;
-      margin-top: 5px;
-      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
-      transition: all 0.2s ease;
+      font-weight: bold;
+      margin-top: 8px;
+      transition: transform 0.2s, opacity 0.2s;
     }
-
     button.btn-submit:hover {
-      opacity: 0.95;
+      opacity: 0.9;
       transform: translateY(-1px);
     }
-
     .admin-link {
       display: block;
       text-align: center;
-      margin-top: 18px;
-      color: #6b7280;
+      margin-top: 15px;
+      color: #777;
       text-decoration: none;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
     }
-
     .admin-link:hover {
-      color: #e11d48;
+      color: #ff416c;
       text-decoration: underline;
     }
-
     .select2-container { width: 100% !important; }
-
-    /* Modal Styles for Desktop & Mobile Admin Panel */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(4px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 15px;
-    }
-
-    .modal-content {
-      background: #ffffff;
-      width: 100%;
-      max-width: 480px;
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-      max-height: 90vh;
-      overflow-y: auto;
-      animation: modalSlide 0.3s ease-out;
-    }
-
-    @keyframes modalSlide {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #f3f4f6;
-      padding-bottom: 12px;
-      margin-bottom: 15px;
-    }
-
-    .modal-header h3 {
-      margin: 0;
-      color: #111827;
-      font-size: 18px;
-    }
-
-    .close-btn {
-      background: #f3f4f6;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
-      color: #4b5563;
-    }
-
-    .admin-section {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-
-    .admin-section-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-admin-save {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      margin-top: 8px;
-    }
   </style>
 </head>
 <body>
@@ -292,16 +164,15 @@
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
   
-  <!-- Countdown Timer Box -->
+  <!-- Notice Banner -->
+  <div class="notice-banner">
+    ⚠️ ध्यान दें: कृपया मीटिंग शुरू होने के 5 मिनट पहले ही लॉगिन करें।
+  </div>
+
+  <!-- Countdown Timer -->
   <div class="countdown-box">
     <div class="countdown-title">अगली मीटिंग में शेष समय</div>
     <div id="timerDisplay" class="countdown-timer">00:00:00</div>
-    <div id="meetingSubInfo" class="meeting-info-sub">समय: लोड हो रहा है...</div>
-  </div>
-
-  <!-- User Notice Banner -->
-  <div class="notice-banner">
-    <span>⚠️</span> कृपया मीटिंग शुरू होने के 5 मिनट पहले ही लॉगिन करें
   </div>
 
   <div class="tabs">
@@ -337,9 +208,9 @@
       <input type="text" id="regAddress" required placeholder="शहर या गांव का नाम">
     </div>
     <div class="form-group">
-      <label>किसने इनवाइट किया (रेफरेंस)</label>
+      <label>किसने इनवाइट किया (रेफरेंस चुनें या सर्च करें)</label>
       <select id="regReferral" class="searchable-select" required>
-        <option value="">-- रेफरेंस चुनें या सर्च करें --</option>
+        <option value="">-- नाम या मोबाइल नंबर से खोजें --</option>
         <option value="Direct / Self">Direct / Self (खुद से)</option>
       </select>
     </div>
@@ -347,92 +218,23 @@
       <label>पासवर्ड बनाएं</label>
       <input type="password" id="regPassword" required placeholder="पासवर्ड बनाएं">
     </div>
-    <button type="submit" class="btn-submit">रजिस्टर करें और जॉइन करें</button>
+    <button type="submit" class="btn-submit">रजिस्टर करें</button>
   </form>
 
-  <a href="#" class="admin-link" onclick="openAdminAuthModal()">⚙️ एडमिन पैनल (केवल एडमिन हेतु)</a>
-</div>
-
-<!-- Admin Login Modal -->
-<div id="adminAuthModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>एडमिन सत्यापन (Admin Login)</h3>
-      <button class="close-btn" onclick="closeModal('adminAuthModal')">&times;</button>
-    </div>
-    <form onsubmit="handleAdminLogin(event)">
-      <div class="form-group">
-        <label>एडमिन ID</label>
-        <input type="text" id="adminIdInput" required placeholder="PURUSHOTTAM047">
-      </div>
-      <div class="form-group">
-        <label>पासवर्ड</label>
-        <input type="password" id="adminPassInput" required placeholder="******">
-      </div>
-      <button type="submit" class="btn-admin-save" style="background:#e11d48;">लॉगिन करें</button>
-    </form>
-  </div>
-</div>
-
-<!-- Admin Control Panel Dashboard Modal -->
-<div id="adminDashboardModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>⚙️ एडमिन कंट्रोल पैनल</h3>
-      <button class="close-btn" onclick="closeModal('adminDashboardModal')">&times;</button>
-    </div>
-    
-    <!-- Section 1: Meeting Links & Times -->
-    <div class="admin-section">
-      <div class="admin-section-title">📌 मीटिंग सेटिंग्स अपडेट करें</div>
-      <form onsubmit="handleUpdateMeetingSettings(event)">
-        <div class="form-group">
-          <label>नई Zoom / Google Meet Link</label>
-          <input type="url" id="adminMeetingLink" required placeholder="https://zoom.us/j/...">
-        </div>
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;">
-            <label>शुरू समय (HH:MM)</label>
-            <input type="text" id="adminMeetingTime" required placeholder="20:30">
-          </div>
-          <div class="form-group" style="flex:1;">
-            <label>अवधि (Minutes)</label>
-            <input type="number" id="adminMeetingDuration" required placeholder="45">
-          </div>
-        </div>
-        <button type="submit" class="btn-admin-save">मीटिंग जानकारी सेव करें</button>
-      </form>
-    </div>
-
-    <!-- Section 2: Add New Referral -->
-    <div class="admin-section">
-      <div class="admin-section-title">👤 नया रेफरल/टीम मेंबर जोड़ें</div>
-      <form onsubmit="handleAddReferral(event)">
-        <div class="form-group">
-          <label>सदस्य का नाम</label>
-          <input type="text" id="adminRefName" required placeholder="नाम दर्ज करें">
-        </div>
-        <div class="form-group">
-          <label>मोबाइल नंबर</label>
-          <input type="tel" id="adminRefMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का नंबर">
-        </div>
-        <button type="submit" class="btn-admin-save" style="background:#059669;">नया रेफरल जोड़ें</button>
-      </form>
-    </div>
-  </div>
+  <a href="#" class="admin-link" onclick="openAdminModal()">एडमिन लॉगिन (केवल एडमिन हेतु)</a>
 </div>
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
-  
-  let meetingStartTimeStr = "20:30";
-  let meetingDurationMin = 45;
-  let currentAdminCreds = null;
+  let meetingTargetTimeStr = "20:30";
   let lastVoiceAlert1Hour = false;
   let lastVoiceAlert10Min = false;
 
   $(document).ready(function() {
-    $('.searchable-select').select2();
+    $('.searchable-select').select2({
+      placeholder: "-- नाम या मोबाइल नंबर से खोजें --",
+      allowClear: true
+    });
     loadReferrals();
     fetchMeetingDetails();
     setInterval(updateCountdown, 1000);
@@ -467,99 +269,66 @@
       .then(data => {
         if(data.success && data.referrals) {
           const select = $('#regReferral');
-          select.html('<option value="">-- रेफरेंस चुनें या सर्च करें --</option><option value="Direct / Self">Direct / Self (खुद से)</option>');
           data.referrals.forEach(ref => {
-            select.append(new Option(ref, ref));
+            // Check karein ki duplicate option na add ho
+            if(select.find("option[value='" + ref + "']").length === 0) {
+              select.append(new Option(ref, ref));
+            }
           });
+          select.trigger('change');
         }
-      })
-      .catch(err => console.log("Referral fetch error:", err));
+      });
   }
 
   function fetchMeetingDetails() {
     fetch(SCRIPT_URL + "?action=getMeetingDetails")
       .then(res => res.json())
       .then(data => {
-        if(data.success) {
-          if(data.time) meetingStartTimeStr = data.time.trim();
-          if(data.duration) meetingDurationMin = parseInt(data.duration) || 45;
-          if(data.link) $('#adminMeetingLink').val(data.link);
-          
-          $('#adminMeetingTime').val(meetingStartTimeStr);
-          $('#adminMeetingDuration').val(meetingDurationMin);
-          
-          $('#meetingSubInfo').text(`समय: ${meetingStartTimeStr} (${meetingDurationMin} मिनट)`);
+        if(data.success && data.time) {
+          meetingTargetTimeStr = data.time;
         }
-      })
-      .catch(err => {
-        console.log("Meeting details error:", err);
-        $('#timerDisplay').text("00:00:00");
       });
   }
 
-  // Robust Timer Parsing (Fixes NaN:NaN:NaN completely)
   function updateCountdown() {
-    try {
-      const now = new Date();
-      let hours = 20;
-      let minutes = 30;
+    if (!meetingTargetTimeStr) return;
+    const parts = meetingTargetTimeStr.split(':');
+    if (parts.length < 2) return;
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    if (isNaN(hours) || isNaN(minutes)) return;
 
-      if (meetingStartTimeStr && meetingStartTimeStr.includes(':')) {
-        const parts = meetingStartTimeStr.split(':');
-        const parsedH = parseInt(parts[0], 10);
-        const parsedM = parseInt(parts[1], 10);
-        if (!isNaN(parsedH)) hours = parsedH;
-        if (!isNaN(parsedM)) minutes = parsedM;
-      }
+    const now = new Date();
+    let target = new Date();
+    target.setHours(hours, minutes, 0, 0);
 
-      let targetStart = new Date();
-      targetStart.setHours(hours, minutes, 0, 0);
+    if (now > target) {
+      target.setDate(target.getDate() + 1);
+    }
 
-      let targetEnd = new Date(targetStart.getTime() + (meetingDurationMin * 60000));
+    const diff = target - now;
+    if (diff <= 0) {
+      $('#timerDisplay').text("मीटिंग लाइव है!");
+      return;
+    }
 
-      // If both start and end times passed for today, point to tomorrow
-      if (now > targetEnd) {
-        targetStart.setDate(targetStart.getDate() + 1);
-        targetEnd = new Date(targetStart.getTime() + (meetingDurationMin * 60000));
-      }
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-      const diffStart = targetStart - now;
-      const diffEnd = targetEnd - now;
+    $('#timerDisplay').text(
+      String(h).padStart(2, '0') + ":" +
+      String(m).padStart(2, '0') + ":" +
+      String(s).padStart(2, '0')
+    );
 
-      if (diffStart <= 0 && diffEnd > 0) {
-        $('#timerDisplay').text("मीटिंग लाइव है!");
-        return;
-      }
-
-      const diff = diffStart > 0 ? diffStart : diffEnd;
-      if (isNaN(diff) || diff < 0) {
-        $('#timerDisplay').text("00:00:00");
-        return;
-      }
-
-      const h = Math.floor(diff / (1000 * 60 * 60));
-      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-      const formatted = 
-        String(h).padStart(2, '0') + ":" +
-        String(m).padStart(2, '0') + ":" +
-        String(s).padStart(2, '0');
-
-      $('#timerDisplay').text(formatted);
-
-      // Voice reminders
-      if (diffStart > 3590000 && diffStart < 3610000 && !lastVoiceAlert1Hour) {
-        speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
-        lastVoiceAlert1Hour = true;
-      }
-      if (diffStart > 590000 && diffStart < 610000 && !lastVoiceAlert10Min) {
-        speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
-        lastVoiceAlert10Min = true;
-      }
-    } catch (e) {
-      console.log("Timer error:", e);
-      $('#timerDisplay').text("00:00:00");
+    if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
+      speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      lastVoiceAlert1Hour = true;
+    }
+    if (diff > 590000 && diff < 610000 && !lastVoiceAlert10Min) {
+      speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      lastVoiceAlert10Min = true;
     }
   }
 
@@ -581,9 +350,13 @@
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। धन्यवाद।");
-        alert("रजिस्ट्रेशन सफल! मीटिंग लिंक पर रीडायरेक्ट किया जा रहा है...");
-        redirectToMeeting();
+        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। अब कृपया साइन इन करें। धन्यवाद।");
+        alert(data.message);
+        // Signup ke bad Sign In tab par redirect karein
+        switchTab('signin');
+        $('#loginMobile').val($('#regMobile').val());
+        $('#signupForm')[0].reset();
+        $('#regReferral').val(null).trigger('change');
       } else {
         alert(data.message);
       }
@@ -594,8 +367,8 @@
     e.preventDefault();
     const payload = {
       action: "signin",
-      mobile: $('#loginMobile').val(),
-      password: $('#loginPassword').val()
+      mobile: $('#loginMobile'].val(),
+      password: $('#loginPassword'].val()
     };
 
     speakText("आपकी मीटिंग ज्वाइन करने हेतु साइन इन किया जा रहा है, कृपया कुछ देर प्रतीक्षा करें।");
@@ -626,90 +399,68 @@
       });
   }
 
-  /* Admin Modal Controls */
-  function openAdminAuthModal() {
-    $('#adminAuthModal').css('display', 'flex');
-  }
+  // Updated Admin Control Panel (Works perfectly on Desktop & Mobile)
+  function openAdminModal() {
+    const adminId = prompt("एडमिन ID दर्ज करें:");
+    if (!adminId) return;
+    const adminPass = prompt("एडमिन पासवर्ड दर्ज करें:");
+    if (!adminPass) return;
 
-  function closeModal(modalId) {
-    $('#' + modalId).css('display', 'none');
-  }
-
-  function handleAdminLogin(e) {
-    e.preventDefault();
-    const id = $('#adminIdInput').val();
-    const pass = $('#adminPassInput').val();
-
+    // First verify admin login
     fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({
-        action: "adminLogin",
-        adminId: id,
-        adminPass: pass
-      })
+      body: JSON.stringify({ action: "adminLogin", adminId: adminId, adminPass: adminPass })
     })
     .then(res => res.json())
-    .then(data => {
-      if(data.success) {
-        currentAdminCreds = { adminId: id, adminPass: pass };
-        closeModal('adminAuthModal');
-        $('#adminDashboardModal').css('display', 'flex');
-        fetchMeetingDetails();
+    .then(resData => {
+      if(resData.success) {
+        let choice = prompt("एडमिन विकल्प चुनें:\n1. मीटिंग सेटिंग्स बदलें (Link, Start Time, Duration)\n2. नया टीम मेंबर / रेफरल जोड़ें\n\nकेवल '1' या '2' टाइप करें:");
+        
+        if (choice === "1") {
+          const newLink = prompt("नई ज़ूम/गूगल मीट लिंक दर्ज करें:");
+          const newTime = prompt("मीटिंग शुरू होने का समय दर्ज करें (उदा: 20:30):", "20:30");
+          const newDuration = prompt("मीटिंग की अवधि मिनटों में दर्ज करें (उदा: 45):", "45");
+          
+          if (newLink && newTime && newDuration) {
+            fetch(SCRIPT_URL, {
+              method: 'POST',
+              body: JSON.stringify({
+                action: "adminUpdate",
+                adminId: adminId,
+                adminPass: adminPass,
+                newLink: newLink,
+                newTime: newTime,
+                newDuration: newDuration
+              })
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message));
+          }
+        } 
+        else if (choice === "2") {
+          const refName = prompt("नए सदस्य / रेफरल का पूरा नाम दर्ज करें:");
+          const refMobile = prompt("नए सदस्य का 10 अंकों का मोबाइल नंबर दर्ज करें:");
+          
+          if (refName && refMobile) {
+            fetch(SCRIPT_URL, {
+              method: 'POST',
+              body: JSON.stringify({
+                action: "adminAddReferral",
+                adminId: adminId,
+                adminPass: adminPass,
+                refName: refName,
+                refMobile: refMobile
+              })
+            })
+            .then(res => res.json())
+            .then(data => {
+              alert(data.message);
+              loadReferrals(); // Refresh dropdown list
+            });
+          }
+        }
       } else {
-        alert(data.message);
-      }
-    });
-  }
-
-  function handleUpdateMeetingSettings(e) {
-    e.preventDefault();
-    if(!currentAdminCreds) return;
-
-    const payload = {
-      action: "adminUpdate",
-      adminId: currentAdminCreds.adminId,
-      adminPass: currentAdminCreds.adminPass,
-      newLink: $('#adminMeetingLink').val(),
-      newTime: $('#adminMeetingTime').val(),
-      newDuration: $('#adminMeetingDuration').val()
-    };
-
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-      alert(data.message);
-      if(data.success) {
-        fetchMeetingDetails();
-      }
-    });
-  }
-
-  function handleAddReferral(e) {
-    e.preventDefault();
-    if(!currentAdminCreds) return;
-
-    const payload = {
-      action: "adminAddReferral",
-      adminId: currentAdminCreds.adminId,
-      adminPass: currentAdminCreds.adminPass,
-      refName: $('#adminRefName').val(),
-      refMobile: $('#adminRefMobile').val()
-    };
-
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-      alert(data.message);
-      if(data.success) {
-        $('#adminRefName').val('');
-        $('#adminRefMobile').val('');
-        loadReferrals();
+        alert(resData.message);
       }
     });
   }
