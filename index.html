@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Meeting Portal</title>
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -28,6 +26,7 @@
       width: 100%;
       max-width: 440px;
       animation: fadeIn 0.8s ease-in-out;
+      position: relative;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-15px); }
@@ -78,7 +77,7 @@
       margin-bottom: 2px;
     }
     .countdown-timer {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: 1px;
     }
@@ -112,7 +111,7 @@
       color: #444;
       font-size: 13px;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
@@ -120,7 +119,7 @@
       font-size: 14px;
       outline: none;
     }
-    input:focus, select:focus {
+    input:focus {
       border-color: #ff416c;
       box-shadow: 0 0 5px rgba(255, 65, 108, 0.3);
     }
@@ -154,7 +153,45 @@
       color: #ff416c;
       text-decoration: underline;
     }
-    .select2-container { width: 100% !important; }
+
+    /* Modal Admin Panel Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 15px;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff416c;
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 12px; right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #999;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -205,11 +242,8 @@
       <input type="text" id="regAddress" required placeholder="शहर या गांव का नाम">
     </div>
     <div class="form-group">
-      <label>किसने इनवाइट किया (रेफरेंस चुनें या सर्च करें)</label>
-      <select id="regReferral" class="searchable-select" required>
-        <option value="">-- नाम या मोबाइल नंबर से खोजें --</option>
-        <option value="Direct / Self">Direct / Self (खुद से)</option>
-      </select>
+      <label>रेफरल मोबाइल नंबर (जिसने इनवाइट किया)</label>
+      <input type="tel" id="regReferral" pattern="[0-9]{10}" placeholder="इनवाइट करने वाले का 10 अंकों का मोबाइल नंबर">
     </div>
     <div class="form-group">
       <label>पासवर्ड बनाएं</label>
@@ -218,22 +252,45 @@
     <button type="submit" class="btn-submit">रजिस्टर करें</button>
   </form>
 
-  <a href="#" class="admin-link" onclick="openAdminModal()">एडमिन लॉगिन (केवल एडमिन हेतु)</a>
+  <a href="#" class="admin-link" onclick="openAdminAuthModal()">एडमिन लॉगिन (केवल एडमिन हेतु)</a>
+</div>
+
+<!-- Admin Settings Modal Popup -->
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-card">
+    <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+    <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
+    <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
+      <div class="form-group">
+        <label>1. नई Zoom / Meet लिंक</label>
+        <input type="url" id="admLink" required placeholder="https://zoom.us/j/...">
+      </div>
+      <div class="form-group">
+        <label>2. मीटिंग शुरू होने का समय (24 Hour Format)</label>
+        <input type="text" id="admTime" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" required placeholder="उदा: 20:30 (रात 8:30 ke liye)">
+      </div>
+      <div class="form-group">
+        <label>3. मीटिंग की अवधि (Minutes)</label>
+        <input type="number" id="admDuration" required placeholder="उदा: 45">
+      </div>
+      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d);">सेटिंग्स सेव करें</button>
+    </form>
+  </div>
 </div>
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
   let meetingTargetTimeStr = "20:30";
+  let currentAdminId = "";
+  let currentAdminPass = "";
   let lastVoiceAlert1Hour = false;
   let lastVoiceAlert10Min = false;
 
   $(document).ready(function() {
-    $('.searchable-select').select2({
-      placeholder: "-- नाम या मोबाइल नंबर से खोजें --",
-      allowClear: true
-    });
-    loadReferrals();
     fetchMeetingDetails();
+    // Refresh details every 30 seconds for live updates
+    setInterval(fetchMeetingDetails, 30000);
+    // Timer ticker every 1 second
     setInterval(updateCountdown, 1000);
   });
 
@@ -260,44 +317,35 @@
     }
   }
 
-  function loadReferrals() {
-    fetch(SCRIPT_URL + "?action=getReferrals")
-      .then(res => res.json())
-      .then(data => {
-        if(data.success && data.referrals) {
-          const select = $('#regReferral');
-          data.referrals.forEach(ref => {
-            if(select.find("option[value='" + ref + "']").length === 0) {
-              select.append(new Option(ref, ref));
-            }
-          });
-          select.trigger('change');
-        }
-      });
-  }
-
   function fetchMeetingDetails() {
     fetch(SCRIPT_URL + "?action=getMeetingDetails")
       .then(res => res.json())
       .then(data => {
         if(data.success && data.time) {
-          meetingTargetTimeStr = data.time;
+          meetingTargetTimeStr = data.time.trim();
         }
-      });
+      })
+      .catch(err => console.log("Fetch error:", err));
   }
 
   function updateCountdown() {
     if (!meetingTargetTimeStr) return;
-    const parts = meetingTargetTimeStr.split(':');
+    
+    // Time formatting clean-up
+    let cleanTime = meetingTargetTimeStr.replace(/[^0-9:]/g, '');
+    const parts = cleanTime.split(':');
     if (parts.length < 2) return;
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
+
+    let hours = parseInt(parts[0], 10);
+    let minutes = parseInt(parts[1], 10);
+
     if (isNaN(hours) || isNaN(minutes)) return;
 
     const now = new Date();
     let target = new Date();
     target.setHours(hours, minutes, 0, 0);
 
+    // Agar target time aaj ka nikal gaya hai to next day ka set karein
     if (now > target) {
       target.setDate(target.getDate() + 1);
     }
@@ -308,7 +356,7 @@
       return;
     }
 
-    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const h = Math.floor(diff / (1000 * 60 * 60));
     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const s = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -318,6 +366,7 @@
       String(s).padStart(2, '0')
     );
 
+    // Voice Reminders
     if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
       speakText("Aapki meeting shuru hone mein matra 1 ghanta shesh hai kripya samay se meeting join karein.");
       lastVoiceAlert1Hour = true;
@@ -330,12 +379,14 @@
 
   function handleSignUp(e) {
     e.preventDefault();
+    const refVal = $('#regReferral').val().trim() || "Direct / Self";
+    
     const params = new URLSearchParams({
       action: "signup",
       name: $('#regName').val(),
       mobile: $('#regMobile').val(),
       address: $('#regAddress').val(),
-      referral: $('#regReferral').val(),
+      referral: refVal,
       password: $('#regPassword').val()
     });
 
@@ -348,7 +399,6 @@
         switchTab('signin');
         $('#loginMobile').val($('#regMobile').val());
         $('#signupForm')[0].reset();
-        $('#regReferral').val(null).trigger('change');
       } else {
         alert(data.message);
       }
@@ -390,7 +440,7 @@
       });
   }
 
-  function openAdminModal() {
+  function openAdminAuthModal() {
     const adminId = prompt("Admin ID darj karein:");
     if (!adminId) return;
     const adminPass = prompt("Admin password darj karein:");
@@ -406,51 +456,40 @@
     .then(res => res.json())
     .then(resData => {
       if(resData.success) {
-        let choice = prompt("Admin vikalp chunein:\n1. Meeting settings badlein (Link, Start Time, Duration)\n2. Naya team member / referral jodein\n\nKewal '1' ya '2' type karein:");
-        
-        if (choice === "1") {
-          const newLink = prompt("Nayi Zoom / Google Meet link darj karein:");
-          const newTime = prompt("Meeting shuru hone ka samay darj karein (Udaharan: 20:30):", "20:30");
-          const newDuration = prompt("Meeting ki avadhi minat mein darj karein (Udaharan: 45):", "45");
-          
-          if (newLink && newTime && newDuration) {
-            const updateParams = new URLSearchParams({
-              action: "adminUpdate",
-              adminId: adminId,
-              adminPass: adminPass,
-              newLink: newLink,
-              newTime: newTime,
-              newDuration: newDuration
-            });
-
-            fetch(SCRIPT_URL + "?" + updateParams.toString())
-            .then(res => res.json())
-            .then(data => alert(data.message));
-          }
-        } 
-        else if (choice === "2") {
-          const refName = prompt("Naye sadasya / referral ka pura naam darj karein:");
-          const refMobile = prompt("Naye sadasya ka 10 anko ka mobile number darj karein:");
-          
-          if (refName && refMobile) {
-            const addParams = new URLSearchParams({
-              action: "adminAddReferral",
-              adminId: adminId,
-              adminPass: adminPass,
-              refName: refName,
-              refMobile: refMobile
-            });
-
-            fetch(SCRIPT_URL + "?" + addParams.toString())
-            .then(res => res.json())
-            .then(data => {
-              alert(data.message);
-              loadReferrals();
-            });
-          }
-        }
+        currentAdminId = adminId;
+        currentAdminPass = adminPass;
+        $('#admLink').val(resData.link || "");
+        $('#admTime').val(resData.time || "20:30");
+        $('#admDuration').val(resData.duration || "45");
+        $('#adminModal').css('display', 'flex');
       } else {
         alert(resData.message);
+      }
+    });
+  }
+
+  function closeAdminModal() {
+    $('#adminModal').hide();
+  }
+
+  function handleAdminUpdate(e) {
+    e.preventDefault();
+    const updateParams = new URLSearchParams({
+      action: "adminUpdate",
+      adminId: currentAdminId,
+      adminPass: currentAdminPass,
+      newLink: $('#admLink').val(),
+      newTime: $('#admTime').val(),
+      newDuration: $('#admDuration').val()
+    });
+
+    fetch(SCRIPT_URL + "?" + updateParams.toString())
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      if(data.success) {
+        meetingTargetTimeStr = $('#admTime').val();
+        closeAdminModal();
       }
     });
   }
