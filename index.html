@@ -51,7 +51,6 @@
       margin-bottom: 15px;
       font-weight: 500;
     }
-    /* Countdown Timer Box */
     .countdown-box {
       background: linear-gradient(135deg, #11998e, #38ef7d);
       color: white;
@@ -153,7 +152,6 @@
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
   
-  <!-- Gradient Countdown Timer -->
   <div class="countdown-box">
     <div class="countdown-title">अगली मीटिंग में शेष समय</div>
     <div id="timerDisplay" class="countdown-timer">00:00:00</div>
@@ -209,8 +207,9 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
-  let meetingTargetTimeStr = "20:30"; // Default
+  // Yahan aapka Google Apps Script URL set kar diya gaya hai:
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
+  let meetingTargetTimeStr = "20:30";
   let lastVoiceAlert1Hour = false;
   let lastVoiceAlert10Min = false;
 
@@ -274,7 +273,6 @@
     let target = new Date();
     target.setHours(hours, minutes, 0, 0);
 
-    // Agar aaj ka time nikal gaya hai, to agle din ka target set karein
     if (now > target) {
       target.setDate(target.getDate() + 1);
     }
@@ -295,7 +293,6 @@
       String(s).padStart(2, '0')
     );
 
-    // Voice alerts check (1 hour = 3600000 ms, 10 mins = 600000 ms)
     if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
       speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
       lastVoiceAlert1Hour = true;
@@ -377,7 +374,7 @@
       const newLink = prompt("नई ज़ूम/गूगल मिट लिंक दर्ज करें:");
       const newTime = prompt("मीटिंग का समय दर्ज करें (उदा: 20:30):", "20:30");
       if (newLink && newTime) {
-        fetch([SCRIPT_URL](https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec), {
+        fetch(SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify({
             action: "adminUpdate",
