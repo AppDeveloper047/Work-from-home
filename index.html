@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Meeting Portal</title>
-  <!-- Select2 CSS for Searchable Referral Dropdown -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -164,12 +163,10 @@
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
   
-  <!-- Notice Banner -->
   <div class="notice-banner">
     ⚠️ ध्यान दें: कृपया मीटिंग शुरू होने के 5 मिनट पहले ही लॉगिन करें।
   </div>
 
-  <!-- Countdown Timer -->
   <div class="countdown-box">
     <div class="countdown-title">अगली मीटिंग में शेष समय</div>
     <div id="timerDisplay" class="countdown-timer">00:00:00</div>
@@ -270,7 +267,6 @@
         if(data.success && data.referrals) {
           const select = $('#regReferral');
           data.referrals.forEach(ref => {
-            // Check karein ki duplicate option na add ho
             if(select.find("option[value='" + ref + "']").length === 0) {
               select.append(new Option(ref, ref));
             }
@@ -323,36 +319,32 @@
     );
 
     if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
-      speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      speakText("Aapki meeting shuru hone mein matra 1 ghanta shesh hai kripya samay se meeting join karein.");
       lastVoiceAlert1Hour = true;
     }
     if (diff > 590000 && diff < 610000 && !lastVoiceAlert10Min) {
-      speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      speakText("Aapki meeting shuru hone mein matra 10 minat shesh hai kripya samay se meeting join karein.");
       lastVoiceAlert10Min = true;
     }
   }
 
   function handleSignUp(e) {
     e.preventDefault();
-    const payload = {
+    const params = new URLSearchParams({
       action: "signup",
       name: $('#regName').val(),
       mobile: $('#regMobile').val(),
       address: $('#regAddress').val(),
       referral: $('#regReferral').val(),
       password: $('#regPassword').val()
-    };
+    });
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
+    fetch(SCRIPT_URL + "?" + params.toString())
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। अब कृपया साइन इन करें। धन्यवाद।");
+        speakText("Aapne apna registration safalta purvak kar liya hai. Ab kripya sign in karein.");
         alert(data.message);
-        // Signup ke bad Sign In tab par redirect karein
         switchTab('signin');
         $('#loginMobile').val($('#regMobile').val());
         $('#signupForm')[0].reset();
@@ -360,23 +352,21 @@
       } else {
         alert(data.message);
       }
-    });
+    })
+    .catch(err => alert("Connection error: " + err));
   }
 
   function handleSignIn(e) {
     e.preventDefault();
-    const payload = {
+    const params = new URLSearchParams({
       action: "signin",
-      mobile: $('#loginMobile'].val(),
-      password: $('#loginPassword'].val()
-    };
+      mobile: $('#loginMobile').val(),
+      password: $('#loginPassword').val()
+    });
 
-    speakText("आपकी मीटिंग ज्वाइन करने हेतु साइन इन किया जा रहा है, कृपया कुछ देर प्रतीक्षा करें।");
+    speakText("Aapki meeting join karne hetu sign in kiya ja raha hai, kripya kuch der prateeksha karein.");
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
+    fetch(SCRIPT_URL + "?" + params.toString())
     .then(res => res.json())
     .then(data => {
       if(data.success) {
@@ -384,7 +374,8 @@
       } else {
         alert(data.message);
       }
-    });
+    })
+    .catch(err => alert("Connection error: " + err));
   }
 
   function redirectToMeeting() {
@@ -394,68 +385,67 @@
         if(data.success && data.link) {
           window.location.href = data.link;
         } else {
-          alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
+          alert("Meeting link uplabdh nahi hai. Kripya admin se sampark karein.");
         }
       });
   }
 
-  // Updated Admin Control Panel (Works perfectly on Desktop & Mobile)
   function openAdminModal() {
-    const adminId = prompt("एडमिन ID दर्ज करें:");
+    const adminId = prompt("Admin ID darj karein:");
     if (!adminId) return;
-    const adminPass = prompt("एडमिन पासवर्ड दर्ज करें:");
+    const adminPass = prompt("Admin password darj karein:");
     if (!adminPass) return;
 
-    // First verify admin login
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: "adminLogin", adminId: adminId, adminPass: adminPass })
-    })
+    const params = new URLSearchParams({
+      action: "adminLogin",
+      adminId: adminId,
+      adminPass: adminPass
+    });
+
+    fetch(SCRIPT_URL + "?" + params.toString())
     .then(res => res.json())
     .then(resData => {
       if(resData.success) {
-        let choice = prompt("एडमिन विकल्प चुनें:\n1. मीटिंग सेटिंग्स बदलें (Link, Start Time, Duration)\n2. नया टीम मेंबर / रेफरल जोड़ें\n\nकेवल '1' या '2' टाइप करें:");
+        let choice = prompt("Admin vikalp chunein:\n1. Meeting settings badlein (Link, Start Time, Duration)\n2. Naya team member / referral jodein\n\nKewal '1' ya '2' type karein:");
         
         if (choice === "1") {
-          const newLink = prompt("नई ज़ूम/गूगल मीट लिंक दर्ज करें:");
-          const newTime = prompt("मीटिंग शुरू होने का समय दर्ज करें (उदा: 20:30):", "20:30");
-          const newDuration = prompt("मीटिंग की अवधि मिनटों में दर्ज करें (उदा: 45):", "45");
+          const newLink = prompt("Nayi Zoom / Google Meet link darj karein:");
+          const newTime = prompt("Meeting shuru hone ka samay darj karein (Udaharan: 20:30):", "20:30");
+          const newDuration = prompt("Meeting ki avadhi minat mein darj karein (Udaharan: 45):", "45");
           
           if (newLink && newTime && newDuration) {
-            fetch(SCRIPT_URL, {
-              method: 'POST',
-              body: JSON.stringify({
-                action: "adminUpdate",
-                adminId: adminId,
-                adminPass: adminPass,
-                newLink: newLink,
-                newTime: newTime,
-                newDuration: newDuration
-              })
-            })
+            const updateParams = new URLSearchParams({
+              action: "adminUpdate",
+              adminId: adminId,
+              adminPass: adminPass,
+              newLink: newLink,
+              newTime: newTime,
+              newDuration: newDuration
+            });
+
+            fetch(SCRIPT_URL + "?" + updateParams.toString())
             .then(res => res.json())
             .then(data => alert(data.message));
           }
         } 
         else if (choice === "2") {
-          const refName = prompt("नए सदस्य / रेफरल का पूरा नाम दर्ज करें:");
-          const refMobile = prompt("नए सदस्य का 10 अंकों का मोबाइल नंबर दर्ज करें:");
+          const refName = prompt("Naye sadasya / referral ka pura naam darj karein:");
+          const refMobile = prompt("Naye sadasya ka 10 anko ka mobile number darj karein:");
           
           if (refName && refMobile) {
-            fetch(SCRIPT_URL, {
-              method: 'POST',
-              body: JSON.stringify({
-                action: "adminAddReferral",
-                adminId: adminId,
-                adminPass: adminPass,
-                refName: refName,
-                refMobile: refMobile
-              })
-            })
+            const addParams = new URLSearchParams({
+              action: "adminAddReferral",
+              adminId: adminId,
+              adminPass: adminPass,
+              refName: refName,
+              refMobile: refMobile
+            });
+
+            fetch(SCRIPT_URL + "?" + addParams.toString())
             .then(res => res.json())
             .then(data => {
               alert(data.message);
-              loadReferrals(); // Refresh dropdown list
+              loadReferrals();
             });
           }
         }
