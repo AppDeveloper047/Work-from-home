@@ -77,9 +77,9 @@
       margin-bottom: 2px;
     }
     .countdown-timer {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
     }
     .tabs {
       display: flex;
@@ -266,8 +266,9 @@
         <input type="url" id="admLink" required placeholder="https://zoom.us/j/...">
       </div>
       <div class="form-group">
-        <label>2. मीटिंग शुरू होने का समय (24 Hour Format)</label>
-        <input type="text" id="admTime" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" required placeholder="उदा: 20:30 (रात 8:30 ke liye)">
+        <label>2. मीटिंग शुरू होने का समय (Select Hour & Minute)</label>
+        <!-- Time Picker Input -->
+        <input type="time" id="admTime" required style="cursor: pointer; padding: 10px; font-weight: bold;">
       </div>
       <div class="form-group">
         <label>3. मीटिंग की अवधि (Minutes)</label>
@@ -288,9 +289,7 @@
 
   $(document).ready(function() {
     fetchMeetingDetails();
-    // Refresh details every 30 seconds for live updates
     setInterval(fetchMeetingDetails, 30000);
-    // Timer ticker every 1 second
     setInterval(updateCountdown, 1000);
   });
 
@@ -322,7 +321,13 @@
       .then(res => res.json())
       .then(data => {
         if(data.success && data.time) {
-          meetingTargetTimeStr = data.time.trim();
+          let str = data.time.toString();
+          let match = str.match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
+          if (match) {
+            meetingTargetTimeStr = match[0];
+          } else {
+            meetingTargetTimeStr = "20:30";
+          }
         }
       })
       .catch(err => console.log("Fetch error:", err));
@@ -331,48 +336,45 @@
   function updateCountdown() {
     if (!meetingTargetTimeStr) return;
     
-    // Time formatting clean-up
-    let cleanTime = meetingTargetTimeStr.replace(/[^0-9:]/g, '');
-    const parts = cleanTime.split(':');
+    let parts = meetingTargetTimeStr.split(':');
     if (parts.length < 2) return;
 
-    let hours = parseInt(parts[0], 10);
-    let minutes = parseInt(parts[1], 10);
+    let targetHours = parseInt(parts[0], 10);
+    let targetMinutes = parseInt(parts[1], 10);
 
-    if (isNaN(hours) || isNaN(minutes)) return;
+    if (isNaN(targetHours) || isNaN(targetMinutes)) return;
 
     const now = new Date();
     let target = new Date();
-    target.setHours(hours, minutes, 0, 0);
+    target.setHours(targetHours, targetMinutes, 0, 0);
 
-    // Agar target time aaj ka nikal gaya hai to next day ka set karein
     if (now > target) {
       target.setDate(target.getDate() + 1);
     }
 
     const diff = target - now;
     if (diff <= 0) {
-      $('#timerDisplay').text("मीटिंग लाइव है!");
+      $('#timerDisplay').text("00:00:00");
       return;
     }
 
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    let totalSeconds = Math.floor(diff / 1000);
+    let hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
 
     $('#timerDisplay').text(
-      String(h).padStart(2, '0') + ":" +
-      String(m).padStart(2, '0') + ":" +
-      String(s).padStart(2, '0')
+      String(hours).padStart(2, '0') + ":" +
+      String(minutes).padStart(2, '0') + ":" +
+      String(seconds).padStart(2, '0')
     );
 
-    // Voice Reminders
     if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
-      speakText("Aapki meeting shuru hone mein matra 1 ghanta shesh hai kripya samay se meeting join karein.");
+      speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
       lastVoiceAlert1Hour = true;
     }
     if (diff > 590000 && diff < 610000 && !lastVoiceAlert10Min) {
-      speakText("Aapki meeting shuru hone mein matra 10 minat shesh hai kripya samay se meeting join karein.");
+      speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
       lastVoiceAlert10Min = true;
     }
   }
@@ -394,7 +396,7 @@
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        speakText("Aapne apna registration safalta purvak kar liya hai. Ab kripya sign in karein.");
+        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। अब कृपया साइन इन करें। धन्यवाद।");
         alert(data.message);
         switchTab('signin');
         $('#loginMobile').val($('#regMobile').val());
@@ -414,13 +416,15 @@
       password: $('#loginPassword').val()
     });
 
-    speakText("Aapki meeting join karne hetu sign in kiya ja raha hai, kripya kuch der prateeksha karein.");
+    speakText("आपका अकाउंट मीटिंग हेतु लॉगिन किया जा रहा है। आपकी सफलता हेतु आपको अग्रिम बधाइयां।");
 
     fetch(SCRIPT_URL + "?" + params.toString())
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        redirectToMeeting();
+        setTimeout(function() {
+          redirectToMeeting();
+        }, 2000);
       } else {
         alert(data.message);
       }
@@ -435,15 +439,15 @@
         if(data.success && data.link) {
           window.location.href = data.link;
         } else {
-          alert("Meeting link uplabdh nahi hai. Kripya admin se sampark karein.");
+          alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
         }
       });
   }
 
   function openAdminAuthModal() {
-    const adminId = prompt("Admin ID darj karein:");
+    const adminId = prompt("Admin ID दर्ज करें:");
     if (!adminId) return;
-    const adminPass = prompt("Admin password darj karein:");
+    const adminPass = prompt("Admin Password दर्ज करें:");
     if (!adminPass) return;
 
     const params = new URLSearchParams({
@@ -474,12 +478,14 @@
 
   function handleAdminUpdate(e) {
     e.preventDefault();
+    const newTimeVal = $('#admTime').val();
+
     const updateParams = new URLSearchParams({
       action: "adminUpdate",
       adminId: currentAdminId,
       adminPass: currentAdminPass,
       newLink: $('#admLink').val(),
-      newTime: $('#admTime').val(),
+      newTime: newTimeVal,
       newDuration: $('#admDuration').val()
     });
 
@@ -488,7 +494,8 @@
     .then(data => {
       alert(data.message);
       if(data.success) {
-        meetingTargetTimeStr = $('#admTime').val();
+        meetingTargetTimeStr = newTimeVal;
+        updateCountdown();
         closeAdminModal();
       }
     });
