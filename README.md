@@ -1,2 +1,400 @@
-# Work-from-home
-Daily Mittings For Work Projects
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Success Hub - Meeting Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 15px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 25px 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 440px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .brand-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .brand-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    /* Countdown Timer Box */
+    .countdown-box {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .countdown-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .countdown-timer {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #eee;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.3s ease;
+    }
+    .tab-btn.active {
+      color: #ff416c;
+      border-bottom: 3px solid #ff416c;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #444;
+      font-size: 13px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: #ff416c;
+      box-shadow: 0 0 5px rgba(255, 65, 108, 0.3);
+    }
+    button.btn-submit {
+      width: 100%;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 8px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    button.btn-submit:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .admin-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #777;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .admin-link:hover {
+      color: #ff416c;
+      text-decoration: underline;
+    }
+    .select2-container { width: 100% !important; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="brand-title">Global Success Hub</div>
+  <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
+  
+  <!-- Gradient Countdown Timer -->
+  <div class="countdown-box">
+    <div class="countdown-title">अगली मीटिंग में शेष समय</div>
+    <div id="timerDisplay" class="countdown-timer">00:00:00</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('signin')">साइन इन (पुराने सदस्य)</button>
+    <button class="tab-btn" onclick="switchTab('signup')">साइन अप (नए सदस्य)</button>
+  </div>
+
+  <!-- Sign In Form -->
+  <form id="signinForm" onsubmit="handleSignIn(event)">
+    <div class="form-group">
+      <label>मोबाइल नंबर</label>
+      <input type="tel" id="loginMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
+    </div>
+    <div class="form-group">
+      <label>पासवर्ड</label>
+      <input type="password" id="loginPassword" required placeholder="अपना पासवर्ड दर्ज करें">
+    </div>
+    <button type="submit" class="btn-submit">मीटिंग जॉइन करें</button>
+  </form>
+
+  <!-- Sign Up Form -->
+  <form id="signupForm" onsubmit="handleSignUp(event)" style="display: none;">
+    <div class="form-group">
+      <label>पूरा नाम</label>
+      <input type="text" id="regName" required placeholder="अपना नाम दर्ज करें">
+    </div>
+    <div class="form-group">
+      <label>मोबाइल नंबर</label>
+      <input type="tel" id="regMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
+    </div>
+    <div class="form-group">
+      <label>पता / स्थान</label>
+      <input type="text" id="regAddress" required placeholder="शहर या गांव का नाम">
+    </div>
+    <div class="form-group">
+      <label>किसने इनवाइट किया (रेफरेंस)</label>
+      <select id="regReferral" class="searchable-select" required>
+        <option value="">-- रेफरेंस चुनें या सर्च करें --</option>
+        <option value="Direct / Self">Direct / Self (खुद से)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>पासवर्ड बनाएं</label>
+      <input type="password" id="regPassword" required placeholder="पासवर्ड बनाएं">
+    </div>
+    <button type="submit" class="btn-submit">रजिस्टर करें और जॉइन करें</button>
+  </form>
+
+  <a href="#" class="admin-link" onclick="openAdminModal()">एडमिन लॉगिन (केवल एडमिन हेतु)</a>
+</div>
+
+<script>
+  const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+  let meetingTargetTimeStr = "20:30"; // Default
+  let lastVoiceAlert1Hour = false;
+  let lastVoiceAlert10Min = false;
+
+  $(document).ready(function() {
+    $('.searchable-select').select2();
+    loadReferrals();
+    fetchMeetingDetails();
+    setInterval(updateCountdown, 1000);
+  });
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'hi-IN';
+      utterance.rate = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function switchTab(type) {
+    $('.tab-btn').removeClass('active');
+    if(type === 'signin') {
+      $('.tab-btn:nth-child(1)').addClass('active');
+      $('#signinForm').show();
+      $('#signupForm').hide();
+    } else {
+      $('.tab-btn:nth-child(2)').addClass('active');
+      $('#signinForm').hide();
+      $('#signupForm').show();
+    }
+  }
+
+  function loadReferrals() {
+    fetch(SCRIPT_URL + "?action=getReferrals")
+      .then(res => res.json())
+      .then(data => {
+        if(data.success && data.referrals) {
+          const select = $('#regReferral');
+          data.referrals.forEach(ref => {
+            select.append(new Option(ref, ref));
+          });
+        }
+      });
+  }
+
+  function fetchMeetingDetails() {
+    fetch(SCRIPT_URL + "?action=getMeetingDetails")
+      .then(res => res.json())
+      .then(data => {
+        if(data.success && data.time) {
+          meetingTargetTimeStr = data.time;
+        }
+      });
+  }
+
+  function updateCountdown() {
+    const now = new Date();
+    const [hours, minutes] = meetingTargetTimeStr.split(':').map(Number);
+    
+    let target = new Date();
+    target.setHours(hours, minutes, 0, 0);
+
+    // Agar aaj ka time nikal gaya hai, to agle din ka target set karein
+    if (now > target) {
+      target.setDate(target.getDate() + 1);
+    }
+
+    const diff = target - now;
+    if (diff <= 0) {
+      $('#timerDisplay').text("मीटिंग लाइव है!");
+      return;
+    }
+
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60 * 60 / 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    $('#timerDisplay').text(
+      String(h).padStart(2, '0') + ":" +
+      String(m).padStart(2, '0') + ":" +
+      String(s).padStart(2, '0')
+    );
+
+    // Voice alerts check (1 hour = 3600000 ms, 10 mins = 600000 ms)
+    if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
+      speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      lastVoiceAlert1Hour = true;
+    }
+    if (diff > 590000 && diff < 610000 && !lastVoiceAlert10Min) {
+      speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
+      lastVoiceAlert10Min = true;
+    }
+  }
+
+  function handleSignUp(e) {
+    e.preventDefault();
+    const payload = {
+      action: "signup",
+      name: $('#regName').val(),
+      mobile: $('#regMobile').val(),
+      address: $('#regAddress').val(),
+      referral: $('#regReferral').val(),
+      password: $('#regPassword').val()
+    };
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success) {
+        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। धन्यवाद।");
+        alert("रजिस्ट्रेशन सफल! मीटिंग लिंक पर रीडायरेक्ट किया जा रहा है...");
+        redirectToMeeting();
+      } else {
+        alert(data.message);
+      }
+    });
+  }
+
+  function handleSignIn(e) {
+    e.preventDefault();
+    const payload = {
+      action: "signin",
+      mobile: $('#loginMobile').val(),
+      password: $('#loginPassword').val()
+    };
+
+    speakText("आपकी मीटिंग ज्वाइन करने हेतु साइन इन किया जा रहा है, कृपया कुछ देर प्रतीक्षा करें।");
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.success) {
+        redirectToMeeting();
+      } else {
+        alert(data.message);
+      }
+    });
+  }
+
+  function redirectToMeeting() {
+    fetch(SCRIPT_URL + "?action=getMeetingDetails")
+      .then(res => res.json())
+      .then(data => {
+        if(data.success && data.link) {
+          window.location.href = data.link;
+        } else {
+          alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
+        }
+      });
+  }
+
+  function openAdminModal() {
+    const adminId = prompt("एडमिन ID दर्ज करें:");
+    const adminPass = prompt("एडमिन पासवर्ड दर्ज करें:");
+
+    if (adminId === "PURUSHOTTAM047" && adminPass === "$Bhandar047") {
+      const newLink = prompt("नई ज़ूम/गूगल मिट लिंक दर्ज करें:");
+      const newTime = prompt("मीटिंग का समय दर्ज करें (उदा: 20:30):", "20:30");
+      if (newLink && newTime) {
+        fetch([SCRIPT_URL](https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec), {
+          method: 'POST',
+          body: JSON.stringify({
+            action: "adminUpdate",
+            adminId: adminId,
+            adminPass: adminPass,
+            newLink: newLink,
+            newTime: newTime
+          })
+        })
+        .then(res => res.json())
+        .then(data => alert(data.message));
+      }
+    } else {
+      alert("गलत एडमिन ID या पासवर्ड!");
+    }
+  }
+</script>
+
+</body>
+</html>
