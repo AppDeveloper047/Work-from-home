@@ -331,7 +331,7 @@
   <!-- AUTH SECTION (Shown if not logged in) -->
   <div id="authSection" class="auth-box">
     
-    <!-- Top Meeting Card for Non-Logged Users too -->
+    <!-- Top Meeting Card -->
     <div class="top-meeting-card">
       <div style="font-size: 15px; font-weight: bold;">📢 Live Meeting Schedule</div>
       <div class="meeting-info-row">
@@ -389,7 +389,7 @@
   <!-- DASHBOARD SECTION (Shown after login) -->
   <div id="dashboardSection" style="display: none;">
     
-    <!-- Top Meeting Card (Always at the top) -->
+    <!-- Top Meeting Card -->
     <div class="top-meeting-card">
       <div style="font-size: 16px; font-weight: bold;">🚀 लाइव मीटिंग सेंटर</div>
       <div class="meeting-info-row">
@@ -424,9 +424,7 @@
     <div id="subScreenView" class="sub-screen">
       <button onclick="closeCategory()" class="back-btn">⬅️ वापस जाएं (Back)</button>
       <h2 id="subScreenTitle" style="color: #333; margin-top: 0; font-size: 20px;"></h2>
-      <div id="subScreenContent">
-        <!-- Dynamic video list with description first -->
-      </div>
+      <div id="subScreenContent"></div>
     </div>
 
   </div>
@@ -440,10 +438,11 @@
     <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
     <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
       
-      <div class="admin-section-title">1. Advertisement Banner Image</div>
+      <div class="admin-section-title">1. Advertisement Banner Upload</div>
       <div class="form-group">
-        <label>Banner Image URL (Photo link)</label>
-        <input type="url" id="admBannerUrl" placeholder="https://example.com/banner.jpg">
+        <label>Select Banner Image (Phone se photo chunein)</label>
+        <input type="file" id="admBannerFile" accept="image/*" onchange="encodeImageFileAsURL(this)" style="padding:6px;">
+        <input type="hidden" id="admBannerUrl">
       </div>
 
       <div class="admin-section-title">2. Meeting Timing & Link</div>
@@ -460,22 +459,25 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Business Plans Videos (JSON Format)</div>
+      <div class="admin-section-title">3. Business Plans Videos</div>
       <div class="form-group">
-        <label>Enter JSON Array (Description first, then Link)</label>
-        <textarea id="admBusinessPlans" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Full Plan Hindi", "url": "https://www.youtube.com/embed/..."}]'></textarea>
+        <label>List of Videos (Description & Link)</label>
+        <div id="bpContainer"></div>
+        <button type="button" onclick="addVideoField('bpContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
       <div class="admin-section-title">4. Products Information Videos</div>
       <div class="form-group">
-        <label>Enter JSON Array</label>
-        <textarea id="admProductsInfo" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Aloe Vera Benefits", "url": "https://www.youtube.com/embed/..."}]'></textarea>
+        <label>List of Videos</label>
+        <div id="piContainer"></div>
+        <button type="button" onclick="addVideoField('piContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
       <div class="admin-section-title">5. Product Testimonials Videos</div>
       <div class="form-group">
-        <label>Enter JSON Array</label>
-        <textarea id="admTestimonials" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Weight Loss Success Story", "url": "https://www.youtube.com/embed/..."}]'></textarea>
+        <label>List of Videos</label>
+        <div id="tsContainer"></div>
+        <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
       <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
@@ -560,7 +562,6 @@
     let startTime = portalData.time;
     let durationMin = parseInt(portalData.duration, 10) || 45;
 
-    // Calculate End Time
     let parts = startTime.split(':');
     let startH = parseInt(parts[0], 10) || 0;
     let startM = parseInt(parts[1], 10) || 0;
@@ -577,6 +578,17 @@
 
     $('#dashStartTime').text("शुरू होने का समय: " + startTime);
     $('#dashEndTime').text("समाप्ति समय: " + endTimeFormatted);
+  }
+
+  function encodeImageFileAsURL(element) {
+    let file = element.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onloadend = function() {
+        $('#admBannerUrl').val(reader.result);
+      }
+      reader.readAsDataURL(file);
+    }
   }
 
   function handleSignUp(e) {
@@ -709,6 +721,40 @@
     $('#mainCategoryView').show();
   }
 
+  function addVideoField(containerId, desc, url) {
+    let html = `
+      <div class="vid-row" style="background:#f9f9f9; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #ddd;">
+        <input type="text" class="v-desc" placeholder="Video Description (Pehle likhein)" value="${desc}" style="margin-bottom:5px;">
+        <input type="url" class="v-url" placeholder="YouTube/FB Video URL" value="${url}">
+        <button type="button" onclick="$(this).parent().remove()" style="margin-top:5px; background:#dc3545; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Hataayein</button>
+      </div>
+    `;
+    $('#' + containerId).append(html);
+  }
+
+  function loadVideoFields(containerId, items) {
+    $('#' + containerId).empty();
+    if(items && items.length > 0) {
+      items.forEach(i => {
+        addVideoField(containerId, i.desc || "", i.url || "");
+      });
+    } else {
+      addVideoField(containerId, "", "");
+    }
+  }
+
+  function gatherVideos(containerId) {
+    let list = [];
+    $('#' + containerId + ' .vid-row').each(function() {
+      let desc = $(this).find('.v-desc').val().trim();
+      let url = $(this).find('.v-url').val().trim();
+      if(desc || url) {
+        list.push({ desc: desc, url: url });
+      }
+    });
+    return JSON.stringify(list);
+  }
+
   function openAdminAuthModal() {
     const adminId = prompt("Admin ID दर्ज करें:");
     if (!adminId) return;
@@ -731,9 +777,11 @@
         $('#admTime').val(resData.portal.time || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
         $('#admBannerUrl').val(resData.portal.bannerUrl || "");
-        $('#admBusinessPlans').val(resData.portal.businessPlans || "[]");
-        $('#admProductsInfo').val(resData.portal.productsInfo || "[]");
-        $('#admTestimonials').val(resData.portal.testimonials || "[]");
+
+        loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
+        loadVideoFields('piContainer', resData.portal.productsInfo ? JSON.parse(resData.portal.productsInfo) : []);
+        loadVideoFields('tsContainer', resData.portal.testimonials ? JSON.parse(resData.portal.testimonials) : []);
+
         $('#adminModal').css('display', 'flex');
       } else {
         alert(resData.message);
@@ -755,10 +803,10 @@
       newLink: $('#admLink').val(),
       newTime: $('#admTime').val(),
       newDuration: $('#admDuration').val(),
-      bannerUrl: $('#admBannerUrl.val()') || $('#admBannerUrl').val(),
-      businessPlans: $('#admBusinessPlans').val(),
-      productsInfo: $('#admProductsInfo').val(),
-      testimonials: $('#admTestimonials').val()
+      bannerUrl: $('#admBannerUrl').val(),
+      businessPlans: gatherVideos('bpContainer'),
+      productsInfo: gatherVideos('piContainer'),
+      testimonials: gatherVideos('tsContainer')
     });
 
     fetch(SCRIPT_URL + "?" + updateParams.toString())
@@ -769,7 +817,8 @@
         closeAdminModal();
         fetchPortalData();
       }
-    });
+    })
+    .catch(err => alert("Save karne me error aayi: " + err));
   }
 </script>
 
