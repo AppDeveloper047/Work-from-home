@@ -9,7 +9,6 @@
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
     
-    /* Animated Multi-Color Gradient Background */
     body {
       background: linear-gradient(135deg, #ff416c, #ff4b2b, #667eea, #764ba2, #11998e);
       background-size: 300% 300%;
@@ -19,7 +18,7 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 15px;
+      padding: 10px;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -28,9 +27,9 @@
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
-      padding: 25px;
+      padding: 20px;
       border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       width: 100%;
@@ -44,7 +43,7 @@
 
     .brand-title {
       text-align: center;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
       -webkit-background-clip: text;
@@ -55,22 +54,51 @@
     }
     .brand-subtitle {
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       color: #555;
       margin-bottom: 15px;
       font-weight: 600;
     }
     
-    .notice-banner {
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      color: #856404;
+    /* Advertisement Banner at Top */
+    .banner-container {
+      width: 100%;
+      max-height: 180px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+    }
+    .banner-container img {
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Top Meeting Card */
+    .top-meeting-card {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      padding: 15px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+    .meeting-info-row {
+      display: flex;
+      justify-content: space-around;
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.1);
       padding: 8px;
       border-radius: 8px;
-      font-size: 12px;
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 15px;
     }
 
     /* Auth Form Styling */
@@ -151,48 +179,45 @@
       text-decoration: underline;
     }
 
-    /* Dashboard Layout */
-    .dashboard-grid {
+    /* Category Cards Grid */
+    .category-grid {
       display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 20px;
-    }
-    @media (max-width: 768px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
-    }
-
-    .main-content {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 15px;
+      margin-bottom: 20px;
     }
-    .sidebar-panel {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 12px;
-      border: 1px solid #e9ecef;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .countdown-box {
-      background: linear-gradient(135deg, #11998e, #38ef7d);
+    .category-card {
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 14px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      transition: transform 0.2s, opacity 0.2s;
     }
-    .countdown-title {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-bottom: 2px;
+    .category-card:hover {
+      transform: translateY(-3px);
+      opacity: 0.95;
     }
-    .countdown-timer {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 2px;
+    .category-card h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .category-card p { margin: 0; font-size: 12px; opacity: 0.9; }
+
+    /* Sub-Screen / Detail View */
+    .sub-screen {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 15px;
     }
 
     /* Video Card Styling */
@@ -200,14 +225,17 @@
       background: #fff;
       border: 1px solid #e1e1e1;
       border-radius: 10px;
-      padding: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .video-desc {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: #333;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      border-left: 4px solid #ff416c;
+      padding-left: 8px;
     }
     .video-frame {
       position: relative;
@@ -218,7 +246,7 @@
       overflow: hidden;
       background: #000;
     }
-    .video-frame iframe, .video-frame video {
+    .video-frame iframe {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       border: none;
@@ -228,12 +256,13 @@
       background: #dc3545;
       color: white;
       border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 13px;
       width: 100%;
+      margin-top: 10px;
     }
 
     /* Admin Modal */
@@ -253,7 +282,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -276,20 +305,41 @@
       color: #999;
       font-weight: bold;
     }
+    .admin-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #11998e;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      border-bottom: 1px dashed #ddd;
+      padding-bottom: 3px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
+  
+  <!-- Advertisement Banner (Top) -->
+  <div id="bannerBox" class="banner-container">
+    <img id="bannerImg" src="" alt="Advertisement Banner">
+  </div>
+
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
-  
-  <div class="notice-banner">
-    ⚠️ ध्यान दें: कृपया मीटिंग शुरू होने के 5 मिनट पहले ही लॉगिन करें।
-  </div>
 
   <!-- AUTH SECTION (Shown if not logged in) -->
   <div id="authSection" class="auth-box">
+    
+    <!-- Top Meeting Card for Non-Logged Users too -->
+    <div class="top-meeting-card">
+      <div style="font-size: 15px; font-weight: bold;">📢 Live Meeting Schedule</div>
+      <div class="meeting-info-row">
+        <span id="authStartTime">Start: --:--</span>
+        <span id="authEndTime">End: --:--</span>
+      </div>
+    </div>
+
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('signin')">साइन इन (पुराने सदस्य)</button>
       <button class="tab-btn" onclick="switchTab('signup')">साइन अप (नए सदस्य)</button>
@@ -338,32 +388,47 @@
 
   <!-- DASHBOARD SECTION (Shown after login) -->
   <div id="dashboardSection" style="display: none;">
-    <div class="dashboard-grid">
-      
-      <!-- Left Side: Videos with Descriptions -->
-      <div class="main-content" id="videoContainer">
-        <h3 style="margin: 0 0 5px 0; color: #333; font-size: 16px;">🎥 ट्रेनिंग एवं मोटिवेशनल वीडियोज़</h3>
-        <!-- Dynamic videos will load here -->
+    
+    <!-- Top Meeting Card (Always at the top) -->
+    <div class="top-meeting-card">
+      <div style="font-size: 16px; font-weight: bold;">🚀 लाइव मीटिंग सेंटर</div>
+      <div class="meeting-info-row">
+        <span id="dashStartTime">शुरू होने का समय: --:--</span>
+        <span id="dashEndTime">समाप्ति समय: --:--</span>
       </div>
-
-      <!-- Right Side: Meeting Sidebar & Info -->
-      <div class="sidebar-panel">
-        <div class="countdown-box">
-          <div class="countdown-title">अगली मीटिंग में शेष समय</div>
-          <div id="timerDisplay" class="countdown-timer">00:00:00</div>
-        </div>
-
-        <div>
-          <h4 style="margin: 0 0 8px 0; color: #444;">मीटिंग में शामिल हों</h4>
-          <p id="welcomeUserText" style="font-size: 13px; color: #666; margin-bottom: 10px;"></p>
-          <button onclick="joinMeeting()" class="btn-submit" style="margin-top: 0; background: linear-gradient(45deg, #11998e, #38ef7d);">मीटिंग जॉइन करें</button>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 5px 0;">
-        <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
-      </div>
-
+      <button onclick="joinMeeting()" class="btn-submit" style="background: white; color: #11998e; margin-top: 0; font-weight: 800;">मीटिंग जॉइन करें</button>
     </div>
+
+    <!-- Main Categories View -->
+    <div id="mainCategoryView">
+      <h3 style="color: #333; margin-bottom: 12px; font-size: 16px;">📂 वीडियो श्रेणियां (Video Categories)</h3>
+      <div class="category-grid">
+        <div class="category-card" onclick="openCategory('businessPlans')">
+          <h3>📈 Business Plans</h3>
+          <p>Different languages & easy plans</p>
+        </div>
+        <div class="category-card" onclick="openCategory('productsInfo')">
+          <h3>🛍️ Products Information</h3>
+          <p>Explore all product videos</p>
+        </div>
+        <div class="category-card" onclick="openCategory('testimonials')">
+          <h3>⭐ Product Testimonials</h3>
+          <p>Real customer reviews & results</p>
+        </div>
+      </div>
+
+      <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
+    </div>
+
+    <!-- Sub-Screen View (For Categories) -->
+    <div id="subScreenView" class="sub-screen">
+      <button onclick="closeCategory()" class="back-btn">⬅️ वापस जाएं (Back)</button>
+      <h2 id="subScreenTitle" style="color: #333; margin-top: 0; font-size: 20px;"></h2>
+      <div id="subScreenContent">
+        <!-- Dynamic video list with description first -->
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -374,61 +439,68 @@
     <span class="close-btn" onclick="closeAdminModal()">&times;</span>
     <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
     <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
+      
+      <div class="admin-section-title">1. Advertisement Banner Image</div>
       <div class="form-group">
-        <label>1. नई Zoom / Meet लिंक</label>
+        <label>Banner Image URL (Photo link)</label>
+        <input type="url" id="admBannerUrl" placeholder="https://example.com/banner.jpg">
+      </div>
+
+      <div class="admin-section-title">2. Meeting Timing & Link</div>
+      <div class="form-group">
+        <label>Zoom / Meet Link</label>
         <input type="url" id="admLink" required placeholder="https://zoom.us/j/...">
       </div>
       <div class="form-group">
-        <label>2. मीटिंग शुरू होने का समय</label>
-        <input type="time" id="admTime" required style="cursor: pointer; padding: 10px; font-weight: bold;">
+        <label>Meeting Start Time</label>
+        <input type="time" id="admTime" required style="cursor: pointer; padding: 8px;">
       </div>
       <div class="form-group">
-        <label>3. मीटिंग अवधि (Minutes)</label>
+        <label>Meeting Duration (Minutes)</label>
         <input type="number" id="admDuration" required placeholder="45">
       </div>
-      <hr style="margin: 15px 0;">
-      <h4 style="margin: 0 0 10px 0; color: #ff416c;">वीडियो और विवरण (Descriptions & Video Links)</h4>
-      
+
+      <div class="admin-section-title">3. Business Plans Videos (JSON Format)</div>
       <div class="form-group">
-        <label>वीडियो 1 विवरण (Description)</label>
-        <input type="text" id="admDesc1" placeholder="उदा: Full Business Plan">
-        <label style="margin-top: 5px;">वीडियो 1 Embed/Watch URL (YouTube/FB)</label>
-        <input type="text" id="admVid1" placeholder="https://www.youtube.com/embed/...">
+        <label>Enter JSON Array (Description first, then Link)</label>
+        <textarea id="admBusinessPlans" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Full Plan Hindi", "url": "https://www.youtube.com/embed/..."}]'></textarea>
       </div>
 
-      <div class="form-group" style="margin-top: 10px;">
-        <label>वीडियो 2 विवरण (Description)</label>
-        <input type="text" id="admDesc2" placeholder="उदा: Products Information">
-        <label style="margin-top: 5px;">वीडियो 2 Embed/Watch URL</label>
-        <input type="text" id="admVid2" placeholder="https://www.youtube.com/embed/...">
+      <div class="admin-section-title">4. Products Information Videos</div>
+      <div class="form-group">
+        <label>Enter JSON Array</label>
+        <textarea id="admProductsInfo" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Aloe Vera Benefits", "url": "https://www.youtube.com/embed/..."}]'></textarea>
       </div>
 
-      <div class="form-group" style="margin-top: 10px;">
-        <label>वीडियो 3 विवरण (Description)</label>
-        <input type="text" id="admDesc3" placeholder="उदा: Motivational / Testimonials">
-        <label style="margin-top: 5px;">वीडियो 3 Embed/Watch URL</label>
-        <input type="text" id="admVid3" placeholder="https://www.youtube.com/embed/...">
+      <div class="admin-section-title">5. Product Testimonials Videos</div>
+      <div class="form-group">
+        <label>Enter JSON Array</label>
+        <textarea id="admTestimonials" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder='[{"desc": "Weight Loss Success Story", "url": "https://www.youtube.com/embed/..."}]'></textarea>
       </div>
 
-      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 15px;">सभी सेटिंग्स सेव करें</button>
+      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
     </form>
   </div>
 </div>
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
-  let meetingTargetTimeStr = "20:30";
-  let meetingLinkUrl = "";
+  let portalData = {
+    link: "",
+    time: "20:30",
+    duration: "45",
+    bannerUrl: "",
+    businessPlans: [],
+    productsInfo: [],
+    testimonials: []
+  };
   let currentAdminId = "";
   let currentAdminPass = "";
-  let lastVoiceAlert1Hour = false;
-  let lastVoiceAlert10Min = false;
 
   $(document).ready(function() {
+    fetchPortalData();
     checkPersistentLogin();
-    fetchMeetingDetails();
-    setInterval(fetchMeetingDetails, 30000);
-    setInterval(updateCountdown, 1000);
+    setInterval(fetchPortalData, 30000);
   });
 
   function speakText(text) {
@@ -454,100 +526,57 @@
     }
   }
 
-  function fetchMeetingDetails() {
-    fetch(SCRIPT_URL + "?action=getMeetingDetails")
+  function fetchPortalData() {
+    fetch(SCRIPT_URL + "?action=getPortalData")
       .then(res => res.json())
       .then(data => {
-        if(data.success) {
-          if(data.time) {
-            let str = data.time.toString();
-            let match = str.match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
-            if (match) meetingTargetTimeStr = match[0];
-          }
-          if(data.link) meetingLinkUrl = data.link;
+        if(data.success && data.portal) {
+          portalData.link = data.portal.link || "";
+          portalData.time = data.portal.time || "20:30";
+          portalData.duration = data.portal.duration || "45";
+          portalData.bannerUrl = data.portal.bannerUrl || "";
 
-          // Render dynamic videos if stored or returned
-          renderVideos(data);
+          try { portalData.businessPlans = JSON.parse(data.portal.businessPlans || "[]"); } catch(e) { portalData.businessPlans = []; }
+          try { portalData.productsInfo = JSON.parse(data.portal.productsInfo || "[]"); } catch(e) { portalData.productsInfo = []; }
+          try { portalData.testimonials = JSON.parse(data.portal.testimonials || "[]"); } catch(e) { portalData.testimonials = []; }
+
+          updateMeetingCardDisplay();
+          updateBannerDisplay();
         }
       })
       .catch(err => console.log("Fetch error:", err));
   }
 
-  function renderVideos(data) {
-    const container = $('#videoContainer');
-    // Keep header
-    container.html('<h3 style="margin: 0 0 5px 0; color: #333; font-size: 16px;">🎥 ट्रेनिंग एवं मोटिवेशनल वीडियोज़</h3>');
-
-    // Default sample videos if not configured in sheet
-    let vList = [
-      { desc: data.vidDesc1 || "Full Business Plan", url: data.vidUrl1 || "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-      { desc: data.vidDesc2 || "Products Information & Testimonials", url: data.vidUrl2 || "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-      { desc: data.vidDesc3 || "Motivational & Leadership Video", url: data.vidUrl3 || "https://www.youtube.com/embed/dQw4w9WgXcQ" }
-    ];
-
-    vList.forEach(v => {
-      if(v.url) {
-        // Convert watch URL to embed URL if needed
-        let embedUrl = v.url;
-        if(v.url.includes("watch?v=")) {
-          embedUrl = v.url.replace("watch?v=", "embed/");
-        }
-
-        let html = `
-          <div class="video-card">
-            <div class="video-desc">📌 ${v.desc}</div>
-            <div class="video-frame">
-              <iframe src="${embedUrl}" allowfullscreen></iframe>
-            </div>
-          </div>
-        `;
-        container.append(html);
-      }
-    });
+  function updateBannerDisplay() {
+    if(portalData.bannerUrl) {
+      $('#bannerImg').attr('src', portalData.bannerUrl);
+      $('#bannerBox').show();
+    } else {
+      $('#bannerBox').hide();
+    }
   }
 
-  function updateCountdown() {
-    if (!meetingTargetTimeStr) return;
-    let parts = meetingTargetTimeStr.split(':');
-    if (parts.length < 2) return;
+  function updateMeetingCardDisplay() {
+    let startTime = portalData.time;
+    let durationMin = parseInt(portalData.duration, 10) || 45;
 
-    let targetHours = parseInt(parts[0], 10);
-    let targetMinutes = parseInt(parts[1], 10);
-    if (isNaN(targetHours) || isNaN(targetMinutes)) return;
+    // Calculate End Time
+    let parts = startTime.split(':');
+    let startH = parseInt(parts[0], 10) || 0;
+    let startM = parseInt(parts[1], 10) || 0;
 
-    const now = new Date();
-    let target = new Date();
-    target.setHours(targetHours, targetMinutes, 0, 0);
+    let totalStartMin = startH * 60 + startM;
+    let totalEndMin = totalStartMin + durationMin;
+    let endH = Math.floor(totalEndMin / 60) % 24;
+    let endM = totalEndMin % 60;
 
-    if (now > target) {
-      target.setDate(target.getDate() + 1);
-    }
+    let endTimeFormatted = String(endH).padStart(2, '0') + ":" + String(endM).padStart(2, '0');
 
-    const diff = target - now;
-    if (diff <= 0) {
-      $('#timerDisplay').text("00:00:00");
-      return;
-    }
+    $('#authStartTime').text("Start: " + startTime);
+    $('#authEndTime').text("End: " + endTimeFormatted);
 
-    let totalSeconds = Math.floor(diff / 1000);
-    let hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
-    let minutes = Math.floor((totalSeconds % 3600) / 60);
-    let seconds = totalSeconds % 60;
-
-    $('#timerDisplay').text(
-      String(hours).padStart(2, '0') + ":" +
-      String(minutes).padStart(2, '0') + ":" +
-      String(seconds).padStart(2, '0')
-    );
-
-    if (diff > 3590000 && diff < 3610000 && !lastVoiceAlert1Hour) {
-      speakText("आपकी मीटिंग शुरू होने में मात्र 1 घंटा शेष है कृपया समय से मीटिंग ज्वाइन करें।");
-      lastVoiceAlert1Hour = true;
-    }
-    if (diff > 590000 && diff < 610000 && !lastVoiceAlert10Min) {
-      speakText("आपकी मीटिंग शुरू होने में मात्र 10 मिनट शेष है कृपया समय से मीटिंग ज्वाइन करें।");
-      lastVoiceAlert10Min = true;
-    }
+    $('#dashStartTime').text("शुरू होने का समय: " + startTime);
+    $('#dashEndTime').text("समाप्ति समय: " + endTimeFormatted);
   }
 
   function handleSignUp(e) {
@@ -566,7 +595,7 @@
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        speakText("आपने अपना रजिस्ट्रेशन सफलतापूर्वक कर लिया है। अब कृपया साइन इन करें।");
+        speakText("Aapne apna registration safalta purvak kar liya hai. Ab kripya sign in karein.");
         alert(data.message);
         switchTab('signin');
         $('#loginMobile').val($('#regMobile').val());
@@ -593,10 +622,9 @@
     .then(res => res.json())
     .then(data => {
       if(data.success) {
-        // Save session locally so user doesn't need to login again
         localStorage.setItem("gsh_user", JSON.stringify(data.user));
         setTimeout(function() {
-          showDashboard(data.user.name);
+          showDashboard();
         }, 2000);
       } else {
         alert(data.message);
@@ -608,15 +636,13 @@
   function checkPersistentLogin() {
     const savedUser = localStorage.getItem("gsh_user");
     if(savedUser) {
-      let userObj = JSON.parse(savedUser);
-      showDashboard(userObj.name);
+      showDashboard();
     }
   }
 
-  function showDashboard(userName) {
+  function showDashboard() {
     $('#authSection').hide();
     $('#dashboardSection').show();
-    $('#welcomeUserText').text("स्वागत है, " + userName + "! समय पर मीटिंग ज्वाइन करें।");
   }
 
   function handleLogout() {
@@ -626,11 +652,61 @@
   }
 
   function joinMeeting() {
-    if(meetingLinkUrl) {
-      window.open(meetingLinkUrl, '_blank');
+    if(portalData.link) {
+      window.open(portalData.link, '_blank');
     } else {
       alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
     }
+  }
+
+  function openCategory(type) {
+    $('#mainCategoryView').hide();
+    $('#subScreenView').show();
+
+    let title = "";
+    let items = [];
+
+    if(type === 'businessPlans') {
+      title = "📈 Business Plan Videos";
+      items = portalData.businessPlans;
+    } else if(type === 'productsInfo') {
+      title = "🛍️ Products Information Videos";
+      items = portalData.productsInfo;
+    } else if(type === 'testimonials') {
+      title = "⭐ Product Testimonials";
+      items = portalData.testimonials;
+    }
+
+    $('#subScreenTitle').text(title);
+    const contentBox = $('#subScreenContent');
+    contentBox.empty();
+
+    if(items.length === 0) {
+      contentBox.html('<p style="text-align:center; color:#666;">Yahan koi video uplabdh nahi hai. Admin panel se add karein.</p>');
+      return;
+    }
+
+    items.forEach(item => {
+      let embedUrl = item.url || "";
+      if(embedUrl.includes("watch?v=")) {
+        embedUrl = embedUrl.replace("watch?v=", "embed/");
+      }
+
+      let html = `
+        <div class="video-card">
+          <div class="video-desc">📝 ${item.desc || "Video Description"}</div>
+          <div class="video-frame">
+            <iframe src="${embedUrl}" allowfullscreen></iframe>
+          </div>
+        </div>
+      `;
+      contentBox.append(html);
+    });
+  }
+
+  function closeCategory() {
+    $('#subScreenView').hide();
+    $('#mainCategoryView').show();
   }
 
   function openAdminAuthModal() {
@@ -651,9 +727,13 @@
       if(resData.success) {
         currentAdminId = adminId;
         currentAdminPass = adminPass;
-        $('#admLink').val(resData.link || "");
-        $('#admTime').val(resData.time || "20:30");
-        $('#admDuration').val(resData.duration || "45");
+        $('#admLink').val(resData.portal.link || "");
+        $('#admTime').val(resData.portal.time || "20:30");
+        $('#admDuration').val(resData.portal.duration || "45");
+        $('#admBannerUrl').val(resData.portal.bannerUrl || "");
+        $('#admBusinessPlans').val(resData.portal.businessPlans || "[]");
+        $('#admProductsInfo').val(resData.portal.productsInfo || "[]");
+        $('#admTestimonials').val(resData.portal.testimonials || "[]");
         $('#adminModal').css('display', 'flex');
       } else {
         alert(resData.message);
@@ -667,21 +747,18 @@
 
   function handleAdminUpdate(e) {
     e.preventDefault();
-    const newTimeVal = $('#admTime').val();
 
     const updateParams = new URLSearchParams({
       action: "adminUpdate",
       adminId: currentAdminId,
       adminPass: currentAdminPass,
       newLink: $('#admLink').val(),
-      newTime: newTimeVal,
+      newTime: $('#admTime').val(),
       newDuration: $('#admDuration').val(),
-      vidDesc1: $('#admDesc1').val(),
-      vidUrl1: $('#admVid1').val(),
-      vidDesc2: $('#admDesc2').val(),
-      vidUrl2: $('#admVid2').val(),
-      vidDesc3: $('#admDesc3').val(),
-      vidUrl3: $('#admVid3').val()
+      bannerUrl: $('#admBannerUrl.val()') || $('#admBannerUrl').val(),
+      businessPlans: $('#admBusinessPlans').val(),
+      productsInfo: $('#admProductsInfo').val(),
+      testimonials: $('#admTestimonials').val()
     });
 
     fetch(SCRIPT_URL + "?" + updateParams.toString())
@@ -689,11 +766,8 @@
     .then(data => {
       alert(data.message);
       if(data.success) {
-        meetingTargetTimeStr = newTimeVal;
-        meetingLinkUrl = $('#admLink').val();
-        updateCountdown();
         closeAdminModal();
-        fetchMeetingDetails();
+        fetchPortalData();
       }
     });
   }
