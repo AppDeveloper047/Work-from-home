@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Dashboard Portal</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Cropper.js CSS & JS for Image Cropping -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -415,17 +418,25 @@
 
 </div>
 
+<!-- Admin Settings Modal Popup -->
 <div id="adminModal" class="modal-overlay">
   <div class="modal-card">
     <span class="close-btn" onclick="closeAdminModal()">&times;</span>
     <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
     <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
       
-      <div class="admin-section-title">1. Advertisement Banner Upload</div>
+      <div class="admin-section-title">1. Advertisement Banner & Cropper</div>
       <div class="form-group">
         <label>Banner Photo Select Karein</label>
-        <input type="file" id="admBannerFile" accept="image/*" onchange="encodeImageFileAsURL(this)" style="padding:6px;">
+        <input type="file" id="admBannerFile" accept="image/*" onchange="initCropper(this)" style="padding:6px;">
         <input type="hidden" id="admBannerUrl">
+      </div>
+      <!-- Cropper Container Modal inside Admin -->
+      <div id="cropperContainer" style="display:none; margin-top:10px; text-align:center;">
+        <div style="max-height:250px; overflow:hidden; background:#000; border-radius:8px;">
+          <img id="imageToCrop" src="" style="max-width:100%; display:block; margin:0 auto;">
+        </div>
+        <button type="button" onclick="cropImage()" style="margin-top:10px; background:#11998e; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Crop & Confirm Banner</button>
       </div>
 
       <div class="admin-section-title">2. Meeting Timing & Link</div>
@@ -481,6 +492,7 @@
   };
   let currentAdminId = "";
   let currentAdminPass = "";
+  let cropperInstance = null;
 
   $(document).ready(function() {
     fetchPortalData();
@@ -515,10 +527,7 @@
     if (!timeStr) return "20:30";
     let str = timeStr.toString();
     let match = str.match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
-    if (match) {
-      return match[0];
-    }
-    // If it's a date string like "Sat Dec 30 1899..."
+    if (match) return match[0];
     let d = new Date(str);
     if (!isNaN(d.getTime())) {
       let h = String(d.getHours()).padStart(2, '0');
@@ -597,42 +606,45 @@
     $('#dashEndTime').text("समाप्ति समय: " + endFormatted);
   }
 
-  function encodeImageFileAsURL(element) {
+  // Initialize Cropper.js on file select
+  function initCropper(element) {
     let file = element.files[0];
     if (file) {
       let reader = new FileReader();
-      reader.onloadend = function() {
-        let img = new Image();
-        img.src = reader.result;
-        img.onload = function() {
-          let canvas = document.createElement('canvas');
-          let ctx = canvas.getContext('2d');
-          let targetWidth = 800;
-          let targetHeight = 300;
-          canvas.width = targetWidth;
-          canvas.height = targetHeight;
+      reader.onload = function(e) {
+        let imageElement = document.getElementById('imageToCrop');
+        imageElement.src = e.target.result;
+        $('#cropperContainer').show();
 
-          let startX = 0, startY = 0, srcW = img.width, srcH = img.height;
-          let targetRatio = targetWidth / targetHeight;
-          let imgRatio = srcW / srcH;
-
-          if (imgRatio > targetRatio) {
-            srcW = srcH * targetRatio;
-            startX = (img.width - srcW) / 2;
-          } else {
-            srcH = srcW / targetRatio;
-            startY = (img.height - srcH) / 2;
-          }
-
-          ctx.drawImage(img, startX, startY, srcW, srcH, 0, 0, targetWidth, targetHeight);
-          let compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          $('#admBannerUrl').val(compressedDataUrl);
+        if (cropperInstance) {
+          cropperInstance.destroy();
         }
-      }
+
+        cropperInstance = new Cropper(imageElement, {
+          aspectRatio: 16 / 5,
+          viewMode: 1,
+          autoCropArea: 1,
+        });
+      };
       reader.readAsDataURL(file);
     }
   }
 
+  // Crop image and store base64 result
+  function cropImage() {
+    if (cropperInstance) {
+      let canvas = cropperInstance.getCroppedCanvas({
+        width: 800,
+        height: 250
+      });
+      let croppedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      $('#admBannerUrl').val(croppedDataUrl);
+      $('#cropperContainer').hide();
+      alert("Banner successfully cropped!");
+    }
+  }
+
+  // Robust YouTube URL Parser for Embed
   function getEmbedUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
@@ -644,6 +656,8 @@
       videoId = cleanUrl.split("youtu.be/")[1].split("?")[0];
     } else if (cleanUrl.includes("m.youtube.com/watch?v=")) {
       videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
+    } else if (cleanUrl.includes("/shorts/")) {
+      videoId = cleanUrl.split("/shorts/")[1].split("?")[0];
     }
     if (videoId) {
       return "https://www.youtube.com/embed/" + videoId;
@@ -834,6 +848,7 @@
         $('#admTime').val(cleanTimeString(resData.portal.time) || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
         $('#admBannerUrl').val(resData.portal.bannerUrl || "");
+        $('#cropperContainer').hide();
 
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
         loadVideoFields('piContainer', resData.portal.productsInfo ? JSON.parse(resData.portal.productsInfo) : []);
