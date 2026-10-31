@@ -60,7 +60,6 @@
       font-weight: 600;
     }
     
-    /* Advertisement Banner at Top */
     .banner-container {
       width: 100%;
       max-height: 180px;
@@ -78,7 +77,6 @@
       display: block;
     }
 
-    /* Top Meeting Card */
     .top-meeting-card {
       background: linear-gradient(135deg, #11998e, #38ef7d);
       color: white;
@@ -101,7 +99,6 @@
       border-radius: 8px;
     }
 
-    /* Auth Form Styling */
     .auth-box {
       max-width: 420px;
       margin: 0 auto;
@@ -179,7 +176,6 @@
       text-decoration: underline;
     }
 
-    /* Category Cards Grid */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -203,7 +199,6 @@
     .category-card h3 { margin: 0 0 5px 0; font-size: 18px; }
     .category-card p { margin: 0; font-size: 12px; opacity: 0.9; }
 
-    /* Sub-Screen / Detail View */
     .sub-screen {
       display: none;
       animation: fadeIn 0.4s ease-in-out;
@@ -220,7 +215,6 @@
       margin-bottom: 15px;
     }
 
-    /* Video Card Styling */
     .video-card {
       background: #fff;
       border: 1px solid #e1e1e1;
@@ -265,7 +259,6 @@
       margin-top: 10px;
     }
 
-    /* Admin Modal */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -320,7 +313,6 @@
 
 <div class="container">
   
-  <!-- Advertisement Banner (Top) -->
   <div id="bannerBox" class="banner-container">
     <img id="bannerImg" src="" alt="Advertisement Banner">
   </div>
@@ -328,10 +320,8 @@
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
 
-  <!-- AUTH SECTION (Shown if not logged in) -->
   <div id="authSection" class="auth-box">
     
-    <!-- Top Meeting Card -->
     <div class="top-meeting-card">
       <div style="font-size: 15px; font-weight: bold;">📢 Live Meeting Schedule</div>
       <div class="meeting-info-row">
@@ -345,7 +335,6 @@
       <button class="tab-btn" onclick="switchTab('signup')">साइन अप (नए सदस्य)</button>
     </div>
 
-    <!-- Sign In Form -->
     <form id="signinForm" onsubmit="handleSignIn(event)">
       <div class="form-group">
         <label>मोबाइल नंबर</label>
@@ -358,7 +347,6 @@
       <button type="submit" class="btn-submit">लॉगिन करें</button>
     </form>
 
-    <!-- Sign Up Form -->
     <form id="signupForm" onsubmit="handleSignUp(event)" style="display: none;">
       <div class="form-group">
         <label>पूरा नाम</label>
@@ -386,10 +374,8 @@
     <a href="#" class="admin-link" onclick="openAdminAuthModal()">एडमिन लॉगिन (केवल एडमिन हेतु)</a>
   </div>
 
-  <!-- DASHBOARD SECTION (Shown after login) -->
   <div id="dashboardSection" style="display: none;">
     
-    <!-- Top Meeting Card -->
     <div class="top-meeting-card">
       <div style="font-size: 16px; font-weight: bold;">🚀 लाइव मीटिंग सेंटर</div>
       <div class="meeting-info-row">
@@ -399,7 +385,6 @@
       <button onclick="joinMeeting()" class="btn-submit" style="background: white; color: #11998e; margin-top: 0; font-weight: 800;">मीटिंग जॉइन करें</button>
     </div>
 
-    <!-- Main Categories View -->
     <div id="mainCategoryView">
       <h3 style="color: #333; margin-bottom: 12px; font-size: 16px;">📂 वीडियो श्रेणियां (Video Categories)</h3>
       <div class="category-grid">
@@ -420,7 +405,6 @@
       <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
     </div>
 
-    <!-- Sub-Screen View (For Categories) -->
     <div id="subScreenView" class="sub-screen">
       <button onclick="closeCategory()" class="back-btn">⬅️ वापस जाएं (Back)</button>
       <h2 id="subScreenTitle" style="color: #333; margin-top: 0; font-size: 20px;"></h2>
@@ -431,7 +415,6 @@
 
 </div>
 
-<!-- Admin Settings Modal Popup -->
 <div id="adminModal" class="modal-overlay">
   <div class="modal-card">
     <span class="close-btn" onclick="closeAdminModal()">&times;</span>
@@ -796,7 +779,7 @@
   function handleAdminUpdate(e) {
     e.preventDefault();
 
-    const updateParams = new URLSearchParams({
+    const payload = {
       action: "adminUpdate",
       adminId: currentAdminId,
       adminPass: currentAdminPass,
@@ -807,9 +790,12 @@
       businessPlans: gatherVideos('bpContainer'),
       productsInfo: gatherVideos('piContainer'),
       testimonials: gatherVideos('tsContainer')
-    });
+    };
 
-    fetch(SCRIPT_URL + "?" + updateParams.toString())
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
     .then(res => res.json())
     .then(data => {
       alert(data.message);
