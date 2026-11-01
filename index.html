@@ -335,7 +335,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -514,11 +514,11 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Products Master Data (JSON format or Table rows)</div>
+      <div class="admin-section-title">3. Products Master Management (Manual Add / Edit)</div>
       <div class="form-group">
-        <label>Products Master List (JSON format)</label>
-        <textarea id="admProductMaster" rows="5" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:12px;" placeholder='[{"code":"P01","desc":"Spirulina","pack":"90 Caps","pv":5.5,"mrp":412,"dp":360},{"code":"P02","desc":"Noni","pack":"500ml","pv":12,"mrp":1050,"dp":900}]'></textarea>
-        <small style="color:#666; font-size:11px;">Aap yahan products ki details JSON array format me daal sakte hain.</small>
+        <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
+        <div id="adminProductRowsContainer"></div>
+        <button type="button" onclick="addProductRow('', '', '', '', '', '')" style="margin-top:8px; padding:6px 12px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">+ Naya Product Jodein</button>
       </div>
 
       <div class="admin-section-title">4. Business Plans Videos</div>
@@ -837,7 +837,7 @@
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
     if(products.length === 0) {
-      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products Master data add nahi kiya gaya hai. Kripya Admin panel se add karein.</p>');
+      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products add nahi kiye gaye hain. Kripya Admin panel me products jodein.</p>');
       return;
     }
 
@@ -960,6 +960,49 @@
     html2pdf().from(element).set(opt).save();
   }
 
+  // Admin Product Row Management Functions
+  function addProductRow(code, desc, pack, pv, mrp, dp) {
+    let html = `
+      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 40px; gap:5px; margin-bottom:6px; background:#f9f9f9; padding:6px; border-radius:6px; border:1px solid #ddd;">
+        <input type="text" class="p-code" placeholder="Code" value="${code}">
+        <input type="text" class="p-desc" placeholder="Description" value="${desc}">
+        <input type="text" class="p-pack" placeholder="Pack" value="${pack}">
+        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}">
+        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}">
+        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}">
+        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">&times;</button>
+      </div>
+    `;
+    $('#adminProductRowsContainer').append(html);
+  }
+
+  function loadAdminProductRows(products) {
+    $('#adminProductRowsContainer').empty();
+    if (products && products.length > 0) {
+      products.forEach(p => {
+        addProductRow(p.code || "", p.desc || "", p.pack || "", p.pv || "", p.mrp || "", p.dp || "");
+      });
+    } else {
+      addProductRow("", "", "", "", "", "");
+    }
+  }
+
+  function gatherAdminProducts() {
+    let list = [];
+    $('#adminProductRowsContainer .prod-admin-row').each(function() {
+      let code = $(this).find('.p-code').val().trim();
+      let desc = $(this).find('.p-desc').val().trim();
+      let pack = $(this).find('.p-pack').val().trim();
+      let pv = parseFloat($(this).find('.p-pv').val()) || 0;
+      let mrp = parseFloat($(this).find('.p-mrp').val()) || 0;
+      let dp = parseFloat($(this).find('.p-dp').val()) || 0;
+      if(code || desc) {
+        list.push({ code: code, desc: desc, pack: pack, pv: pv, mrp: mrp, dp: dp });
+      }
+    });
+    return JSON.stringify(list);
+  }
+
   function addVideoField(containerId, desc, url) {
     let html = `
       <div class="vid-row" style="background:#f9f9f9; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #ddd;">
@@ -1008,9 +1051,9 @@
         $('#admTime').val(cleanTimeString(resData.portal.time) || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
         $('#admBannerUrl').val(resData.portal.bannerUrl || "");
-        $('#admProductMaster').val(resData.portal.productMaster || "");
         $('#cropperContainer').hide();
 
+        loadAdminProductRows(resData.portal.productMaster ? JSON.parse(resData.portal.productMaster) : []);
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
         loadVideoFields('piContainer', resData.portal.productsInfo ? JSON.parse(resData.portal.productsInfo) : []);
         loadVideoFields('tsContainer', resData.portal.testimonials ? JSON.parse(resData.portal.testimonials) : []);
@@ -1035,7 +1078,7 @@
       newTime: $('#admTime').val(),
       newDuration: $('#admDuration').val(),
       bannerUrl: $('#admBannerUrl').val(),
-      productMaster: $('#admProductMaster').val(),
+      productMaster: gatherAdminProducts(),
       businessPlans: gatherVideos('bpContainer'),
       productsInfo: gatherVideos('piContainer'),
       testimonials: gatherVideos('tsContainer')
