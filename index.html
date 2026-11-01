@@ -138,15 +138,16 @@
       color: #444;
       font-size: 13px;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 14px;
       outline: none;
+      background: #fff;
     }
-    input:focus {
+    input:focus, select:focus {
       border-color: #ff416c;
       box-shadow: 0 0 5px rgba(255, 65, 108, 0.3);
     }
@@ -253,8 +254,7 @@
 
     .order-table-container {
       width: 100%;
-      max-height: 400px;
-      overflow-y: auto;
+      overflow-x: auto;
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-bottom: 15px;
@@ -268,16 +268,13 @@
       text-align: left;
     }
     table.billing-table th, table.billing-table td {
-      padding: 6px 8px;
+      padding: 8px;
       border-bottom: 1px solid #eee;
       border-right: 1px solid #eee;
     }
     table.billing-table th {
       background: #11998e;
       color: white;
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
     .summary-box {
       background: #f8f9fa;
@@ -288,7 +285,7 @@
     }
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 8px;
       font-weight: bold;
       color: #333;
@@ -297,7 +294,7 @@
     .offer-banner {
       background: linear-gradient(135deg, #f2994a, #f2c94c);
       color: #fff;
-      padding: 8px;
+      padding: 10px;
       border-radius: 8px;
       font-weight: bold;
       text-align: center;
@@ -513,7 +510,7 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Products Master Management (Google Sheet Connected)</div>
+      <div class="admin-section-title">3. Products Master Management</div>
       <div class="form-group">
         <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
         <div id="adminProductRowsContainer"></div>
@@ -535,7 +532,7 @@
         <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें (Save to Sheet)</button>
+      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
     </form>
   </div>
 </div>
@@ -832,11 +829,11 @@
     $('#mainCategoryView').show();
   }
 
-  // Render Order & Billing Portal
+  // Render Order & Billing Portal with Dropdown Rows
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
     if(products.length === 0) {
-      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products add nahi kiye gaye hain. Kripya Admin panel me products jodein.</p>');
+      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products add nahi kiye gaye hain.</p>');
       return;
     }
 
@@ -849,7 +846,7 @@
           <h4 style="margin:0 0 10px 0; color:#11998e; text-align:center;">📊 Order Summary & Margin Calculation</h4>
           <div class="summary-grid">
             <div>Total MRP: ₹<span id="sumTotalMrp">0.00</span></div>
-            <div>Total DP (GST): ₹<span id="sumTotalDp">0.00</span></div>
+            <div>Total DP: ₹<span id="sumTotalDp">0.00</span></div>
             <div>Total Margin: ₹<span id="sumTotalMargin" style="color:green;">0.00</span></div>
             <div>Total PV: <span id="sumTotalPv" style="color:blue;">0.00</span></div>
           </div>
@@ -861,9 +858,8 @@
           <table class="billing-table">
             <thead>
               <tr>
-                <th>P. Code</th>
-                <th>Product Description</th>
-                <th>Pack Size</th>
+                <th>Product Selection</th>
+                <th>Pack</th>
                 <th>PV</th>
                 <th>MRP (₹)</th>
                 <th>DP (₹)</th>
@@ -871,37 +867,62 @@
                 <th>Total MRP</th>
                 <th>Total DP</th>
                 <th>Total PV</th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody id="productRowsBody">
-    `;
-
-    products.forEach((p, idx) => {
-      html += `
-        <tr>
-          <td>${p.code}</td>
-          <td>${p.desc}</td>
-          <td>${p.pack}</td>
-          <td class="pv-val">${p.pv}</td>
-          <td class="mrp-val">${p.mrp}</td>
-          <td class="dp-val">${p.dp}</td>
-          <td><input type="number" min="0" value="0" class="qty-input" data-index="${idx}" style="width:50px; padding:3px; text-align:center;" oninput="calculateBilling()"></td>
-          <td class="tot-mrp">0.00</td>
-          <td class="tot-dp">0.00</td>
-          <td class="tot-pv">0.00</td>
-        </tr>
-      `;
-    });
-
-    html += `
+            <tbody id="selectedProductsBody">
             </tbody>
           </table>
         </div>
       </div>
+      <button type="button" onclick="addSelectedProductRow()" class="btn-submit" style="background: #11998e; margin-bottom: 10px;">+ Naya Product Jodein (Dropdown)</button>
       <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF / Invoice</button>
     `;
 
     container.html(html);
+    addSelectedProductRow(); // Add first default row
+  }
+
+  function addSelectedProductRow() {
+    let products = portalData.productMaster || [];
+    let options = '<option value="">-- Product Chunein --</option>';
+    products.forEach((p, idx) => {
+      options += `<option value="${idx}">${p.code} - ${p.desc} (${p.pack})</option>`;
+    });
+
+    let rowHtml = `
+      <tr class="sel-prod-row">
+        <td><select class="prod-select" onchange="updateRowDetails(this)">${options}</select></td>
+        <td class="r-pack">-</td>
+        <td class="r-pv">0</td>
+        <td class="r-mrp">0</td>
+        <td class="r-dp">0</td>
+        <td><input type="number" min="0" value="1" class="qty-input" style="width:50px; padding:3px; text-align:center;" oninput="calculateBilling()"></td>
+        <td class="tot-mrp">0.00</td>
+        <td class="tot-dp">0.00</td>
+        <td class="tot-pv">0.00</td>
+        <td><button type="button" onclick="$(this).closest('tr').remove(); calculateBilling();" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">X</button></td>
+      </tr>
+    `;
+    $('#selectedProductsBody').append(rowHtml);
+  }
+
+  function updateRowDetails(selectElem) {
+    let idx = $(selectElem).val();
+    let row = $(selectElem).closest('tr');
+    if(idx === "") {
+      row.find('.r-pack').text('-');
+      row.find('.r-pv').text('0');
+      row.find('.r-mrp').text('0');
+      row.find('.r-dp').text('0');
+    } else {
+      let p = portalData.productMaster[idx];
+      row.find('.r-pack').text(p.pack);
+      row.find('.r-pv').text(p.pv);
+      row.find('.r-mrp').text(p.mrp);
+      row.find('.r-dp').text(p.dp);
+    }
+    calculateBilling();
   }
 
   function calculateBilling() {
@@ -909,11 +930,11 @@
     let totalDp = 0;
     let totalPv = 0;
 
-    $('#productRowsBody tr').each(function() {
+    $('#selectedProductsBody tr').each(function() {
       let qty = parseInt($(this).find('.qty-input').val()) || 0;
-      let pv = parseFloat($(this).find('.pv-val').text()) || 0;
-      let mrp = parseFloat($(this).find('.mrp-val').text()) || 0;
-      let dp = parseFloat($(this).find('.dp-val').text()) || 0;
+      let pv = parseFloat($(this).find('.r-pv').text()) || 0;
+      let mrp = parseFloat($(this).find('.r-mrp').text()) || 0;
+      let dp = parseFloat($(this).find('.r-dp').text()) || 0;
 
       let totMrp = qty * mrp;
       let totDp = qty * dp;
@@ -935,12 +956,11 @@
     $('#sumTotalMargin').text(totalMargin.toFixed(2));
     $('#sumTotalPv').text(totalPv.toFixed(2));
 
-    // Offer / Voucher Logic
     let offerText = "";
     if (totalPv >= 25 && totalPv <= 299) {
-      offerText = "🎁 Badhai ho! Aapko 10% Extra Products Gift prapt honge!";
+      offerText = "🎁 Earned Offer: 10% Extra Products Gift!";
     } else if (totalPv >= 301) {
-      offerText = "🎉 Super Offer! Aapko ₹450 Product Voucher + ₹750 Product Voucher + 10% Extra Products Gift sabhi milenge!";
+      offerText = "🎉 Earned Super Offer: ₹450 Product Voucher + ₹750 Product Voucher + 10% Extra Products Gift!";
     }
 
     if(offerText) {
@@ -962,7 +982,6 @@
     html2pdf().from(element).set(opt).save();
   }
 
-  // Admin Product Row Management Functions
   function addProductRow(code, desc, pack, pv, mrp, dp) {
     let html = `
       <div class="prod-admin-row" style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 40px; gap:5px; margin-bottom:6px; background:#f9f9f9; padding:6px; border-radius:6px; border:1px solid #ddd;">
