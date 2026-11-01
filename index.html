@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Dashboard Portal</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Cropper.js CSS & JS for Image Cropping -->
+  <!-- Cropper.js for Banner -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <!-- html2pdf.js for Invoice/Order PDF Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -36,7 +38,7 @@
       border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       width: 100%;
-      max-width: 900px;
+      max-width: 950px;
       animation: fadeIn 0.8s ease-in-out;
     }
     @keyframes fadeIn {
@@ -181,14 +183,14 @@
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
     }
     .category-card {
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      padding: 20px;
+      padding: 18px;
       border-radius: 14px;
       text-align: center;
       cursor: pointer;
@@ -199,8 +201,8 @@
       transform: translateY(-3px);
       opacity: 0.95;
     }
-    .category-card h3 { margin: 0 0 5px 0; font-size: 18px; }
-    .category-card p { margin: 0; font-size: 12px; opacity: 0.9; }
+    .category-card h3 { margin: 0 0 5px 0; font-size: 16px; }
+    .category-card p { margin: 0; font-size: 11px; opacity: 0.9; }
 
     .sub-screen {
       display: none;
@@ -249,6 +251,61 @@
       border: none;
     }
 
+    /* Order Billing Table Styles */
+    .order-table-container {
+      width: 100%;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    table.billing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: #fff;
+      text-align: left;
+    }
+    table.billing-table th, table.billing-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee;
+      border-right: 1px solid #eee;
+    }
+    table.billing-table th {
+      background: #11998e;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .summary-box {
+      background: #f8f9fa;
+      border: 2px dashed #11998e;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+    .offer-banner {
+      background: linear-gradient(135deg, #f2994a, #f2c94c);
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
     .logout-btn {
       background: #dc3545;
       color: white;
@@ -278,7 +335,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -389,25 +446,30 @@
     </div>
 
     <div id="mainCategoryView">
-      <h3 style="color: #333; margin-bottom: 12px; font-size: 16px;">📂 वीडियो श्रेणियां (Video Categories)</h3>
+      <h3 style="color: #333; margin-bottom: 12px; font-size: 16px;">📂 पोर्टल मेन्यू (Categories & Order)</h3>
       <div class="category-grid">
         <div class="category-card" onclick="openCategory('businessPlans')">
           <h3>📈 Business Plans</h3>
-          <p>Different languages & easy plans</p>
+          <p>Different languages & plans</p>
         </div>
         <div class="category-card" onclick="openCategory('productsInfo')">
-          <h3>🛍️ Products Information</h3>
-          <p>Explore all product videos</p>
+          <h3>🛍️ Products Info</h3>
+          <p>Explore product videos</p>
         </div>
         <div class="category-card" onclick="openCategory('testimonials')">
-          <h3>⭐ Product Testimonials</h3>
-          <p>Real customer reviews & results</p>
+          <h3>⭐ Testimonials</h3>
+          <p>Customer reviews & results</p>
+        </div>
+        <div class="category-card" onclick="openCategory('productOrder')" style="background: linear-gradient(135deg, #f2994a, #f2c94c);">
+          <h3>🛒 Product Order & Billing</h3>
+          <p>Select products, calculate PV & Margin</p>
         </div>
       </div>
 
       <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
     </div>
 
+    <!-- Sub Screens -->
     <div id="subScreenView" class="sub-screen">
       <button onclick="closeCategory()" class="back-btn">⬅️ वापस जाएं (Back)</button>
       <h2 id="subScreenTitle" style="color: #333; margin-top: 0; font-size: 20px;"></h2>
@@ -431,9 +493,8 @@
         <input type="file" id="admBannerFile" accept="image/*" onchange="initCropper(this)" style="padding:6px;">
         <input type="hidden" id="admBannerUrl">
       </div>
-      <!-- Cropper Container Modal inside Admin -->
       <div id="cropperContainer" style="display:none; margin-top:10px; text-align:center;">
-        <div style="max-height:250px; overflow:hidden; background:#000; border-radius:8px;">
+        <div style="max-height:220px; overflow:hidden; background:#000; border-radius:8px;">
           <img id="imageToCrop" src="" style="max-width:100%; display:block; margin:0 auto;">
         </div>
         <button type="button" onclick="cropImage()" style="margin-top:10px; background:#11998e; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Crop & Confirm Banner</button>
@@ -453,24 +514,25 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Business Plans Videos</div>
+      <div class="admin-section-title">3. Products Master Data (JSON format or Table rows)</div>
       <div class="form-group">
-        <label>List of Videos (Description & Link)</label>
-        <div id="bpContainer"></div>
+        <label>Products Master List (JSON format)</label>
+        <textarea id="admProductMaster" rows="5" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px; font-size:12px;" placeholder='[{"code":"P01","desc":"Spirulina","pack":"90 Caps","pv":5.5,"mrp":412,"dp":360},{"code":"P02","desc":"Noni","pack":"500ml","pv":12,"mrp":1050,"dp":900}]'></textarea>
+        <small style="color:#666; font-size:11px;">Aap yahan products ki details JSON array format me daal sakte hain.</small>
+      </div>
+
+      <div class="admin-section-title">4. Business Plans Videos</div>
+      <div class="form-group"><div id="bpContainer"></div>
         <button type="button" onclick="addVideoField('bpContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <div class="admin-section-title">4. Products Information Videos</div>
-      <div class="form-group">
-        <label>List of Videos</label>
-        <div id="piContainer"></div>
+      <div class="admin-section-title">5. Products Information Videos</div>
+      <div class="form-group"><div id="piContainer"></div>
         <button type="button" onclick="addVideoField('piContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <div class="admin-section-title">5. Product Testimonials Videos</div>
-      <div class="form-group">
-        <label>List of Videos</label>
-        <div id="tsContainer"></div>
+      <div class="admin-section-title">6. Product Testimonials Videos</div>
+      <div class="form-group"><div id="tsContainer"></div>
         <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
@@ -488,7 +550,8 @@
     bannerUrl: "",
     businessPlans: [],
     productsInfo: [],
-    testimonials: []
+    testimonials: [],
+    productMaster: []
   };
   let currentAdminId = "";
   let currentAdminPass = "";
@@ -550,6 +613,7 @@
           try { portalData.businessPlans = JSON.parse(data.portal.businessPlans || "[]"); } catch(e) { portalData.businessPlans = []; }
           try { portalData.productsInfo = JSON.parse(data.portal.productsInfo || "[]"); } catch(e) { portalData.productsInfo = []; }
           try { portalData.testimonials = JSON.parse(data.portal.testimonials || "[]"); } catch(e) { portalData.testimonials = []; }
+          try { portalData.productMaster = JSON.parse(data.portal.productMaster || "[]"); } catch(e) { portalData.productMaster = []; }
 
           updateMeetingCardDisplay();
           updateBannerDisplay();
@@ -606,7 +670,6 @@
     $('#dashEndTime').text("समाप्ति समय: " + endFormatted);
   }
 
-  // Initialize Cropper.js on file select
   function initCropper(element) {
     let file = element.files[0];
     if (file) {
@@ -615,28 +678,16 @@
         let imageElement = document.getElementById('imageToCrop');
         imageElement.src = e.target.result;
         $('#cropperContainer').show();
-
-        if (cropperInstance) {
-          cropperInstance.destroy();
-        }
-
-        cropperInstance = new Cropper(imageElement, {
-          aspectRatio: 16 / 5,
-          viewMode: 1,
-          autoCropArea: 1,
-        });
+        if (cropperInstance) cropperInstance.destroy();
+        cropperInstance = new Cropper(imageElement, { aspectRatio: 16 / 5, viewMode: 1, autoCropArea: 1 });
       };
       reader.readAsDataURL(file);
     }
   }
 
-  // Crop image and store base64 result
   function cropImage() {
     if (cropperInstance) {
-      let canvas = cropperInstance.getCroppedCanvas({
-        width: 800,
-        height: 250
-      });
+      let canvas = cropperInstance.getCroppedCanvas({ width: 800, height: 250 });
       let croppedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
       $('#admBannerUrl').val(croppedDataUrl);
       $('#cropperContainer').hide();
@@ -644,24 +695,16 @@
     }
   }
 
-  // Robust YouTube URL Parser for Embed
   function getEmbedUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
     if (cleanUrl.includes("embed/")) return cleanUrl;
     let videoId = "";
-    if (cleanUrl.includes("watch?v=")) {
-      videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
-    } else if (cleanUrl.includes("youtu.be/")) {
-      videoId = cleanUrl.split("youtu.be/")[1].split("?")[0];
-    } else if (cleanUrl.includes("m.youtube.com/watch?v=")) {
-      videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
-    } else if (cleanUrl.includes("/shorts/")) {
-      videoId = cleanUrl.split("/shorts/")[1].split("?")[0];
-    }
-    if (videoId) {
-      return "https://www.youtube.com/embed/" + videoId;
-    }
+    if (cleanUrl.includes("watch?v=")) videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
+    else if (cleanUrl.includes("youtu.be/")) videoId = cleanUrl.split("youtu.be/")[1].split("?")[0];
+    else if (cleanUrl.includes("m.youtube.com/watch?v=")) videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
+    else if (cleanUrl.includes("/shorts/")) videoId = cleanUrl.split("/shorts/")[1].split("?")[0];
+    if (videoId) return "https://www.youtube.com/embed/" + videoId;
     return cleanUrl;
   }
 
@@ -709,9 +752,7 @@
     .then(data => {
       if(data.success) {
         localStorage.setItem("gsh_user", JSON.stringify(data.user));
-        setTimeout(function() {
-          showDashboard();
-        }, 2000);
+        setTimeout(function() { showDashboard(); }, 2000);
       } else {
         alert(data.message);
       }
@@ -721,9 +762,7 @@
 
   function checkPersistentLogin() {
     const savedUser = localStorage.getItem("gsh_user");
-    if(savedUser) {
-      showDashboard();
-    }
+    if(savedUser) showDashboard();
   }
 
   function showDashboard() {
@@ -738,11 +777,8 @@
   }
 
   function joinMeeting() {
-    if(portalData.link) {
-      window.open(portalData.link, '_blank');
-    } else {
-      alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
-    }
+    if(portalData.link) window.open(portalData.link, '_blank');
+    else alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
   }
 
   function openCategory(type) {
@@ -750,8 +786,17 @@
     $('#subScreenView').show();
 
     let title = "";
-    let items = [];
+    const contentBox = $('#subScreenContent');
+    contentBox.empty();
 
+    if(type === 'productOrder') {
+      title = "🛒 Product Order & Billing Portal";
+      $('#subScreenTitle').text(title);
+      renderOrderPortal(contentBox);
+      return;
+    }
+
+    let items = [];
     if(type === 'businessPlans') {
       title = "📈 Business Plan Videos";
       items = portalData.businessPlans;
@@ -764,9 +809,6 @@
     }
 
     $('#subScreenTitle').text(title);
-    const contentBox = $('#subScreenContent');
-    contentBox.empty();
-
     if(items.length === 0) {
       contentBox.html('<p style="text-align:center; color:#666;">Yahan koi video uplabdh nahi hai. Admin panel se add karein.</p>');
       return;
@@ -774,7 +816,6 @@
 
     items.forEach(item => {
       let embedUrl = getEmbedUrl(item.url);
-
       let html = `
         <div class="video-card">
           <div class="video-desc">📝 ${item.desc || "Video Description"}</div>
@@ -792,11 +833,138 @@
     $('#mainCategoryView').show();
   }
 
+  // Render Order & Billing Portal
+  function renderOrderPortal(container) {
+    let products = portalData.productMaster || [];
+    if(products.length === 0) {
+      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products Master data add nahi kiya gaya hai. Kripya Admin panel se add karein.</p>');
+      return;
+    }
+
+    let html = `
+      <div id="printableInvoice">
+        <div class="summary-box">
+          <h4 style="margin:0 0 10px 0; color:#11998e; text-align:center;">📊 Order Summary & Margin Calculation</h4>
+          <div class="summary-grid">
+            <div>Total MRP: ₹<span id="sumTotalMrp">0.00</span></div>
+            <div>Total DP (GST): ₹<span id="sumTotalDp">0.00</span></div>
+            <div>Total Margin: ₹<span id="sumTotalMargin" style="color:green;">0.00</span></div>
+            <div>Total PV: <span id="sumTotalPv" style="color:blue;">0.00</span></div>
+          </div>
+        </div>
+
+        <div id="offerNotice" class="offer-banner" style="display:none;"></div>
+
+        <div class="order-table-container">
+          <table class="billing-table">
+            <thead>
+              <tr>
+                <th>P. Code</th>
+                <th>Product Description</th>
+                <th>Pack Size</th>
+                <th>PV</th>
+                <th>MRP (₹)</th>
+                <th>DP (With GST) (₹)</th>
+                <th>Qty</th>
+                <th>Total MRP</th>
+                <th>Total DP</th>
+                <th>Total PV</th>
+              </tr>
+            </thead>
+            <tbody id="productRowsBody">
+    `;
+
+    products.forEach((p, idx) => {
+      html += `
+        <tr>
+          <td>${p.code}</td>
+          <td>${p.desc}</td>
+          <td>${p.pack}</td>
+          <td class="pv-val">${p.pv}</td>
+          <td class="mrp-val">${p.mrp}</td>
+          <td class="dp-val">${p.dp}</td>
+          <td><input type="number" min="0" value="0" class="qty-input" data-index="${idx}" style="width:60px; padding:4px;" oninput="calculateBilling()"></td>
+          <td class="tot-mrp">0.00</td>
+          <td class="tot-dp">0.00</td>
+          <td class="tot-pv">0.00</td>
+        </tr>
+      `;
+    });
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF / Invoice</button>
+    `;
+
+    container.html(html);
+  }
+
+  function calculateBilling() {
+    let totalMrp = 0;
+    let totalDp = 0;
+    let totalPv = 0;
+
+    $('#productRowsBody tr').each(function() {
+      let qty = parseInt($(this).find('.qty-input').val()) || 0;
+      let pv = parseFloat($(this).find('.pv-val').text()) || 0;
+      let mrp = parseFloat($(this).find('.mrp-val').text()) || 0;
+      let dp = parseFloat($(this).find('.dp-val').text()) || 0;
+
+      let totMrp = qty * mrp;
+      let totDp = qty * dp;
+      let totPv = qty * pv;
+
+      $(this).find('.tot-mrp').text(totMrp.toFixed(2));
+      $(this).find('.tot-dp').text(totDp.toFixed(2));
+      $(this).find('.tot-pv').text(totPv.toFixed(2));
+
+      totalMrp += totMrp;
+      totalDp += totDp;
+      totalPv += totPv;
+    });
+
+    let totalMargin = totalMrp - totalDp;
+
+    $('#sumTotalMrp').text(totalMrp.toFixed(2));
+    $('#sumTotalDp').text(totalDp.toFixed(2));
+    $('#sumTotalMargin').text(totalMargin.toFixed(2));
+    $('#sumTotalPv').text(totalPv.toFixed(2));
+
+    // Offer / Voucher Logic
+    let offerText = "";
+    if (totalPv >= 25 && totalPv <= 299) {
+      offerText = "🎁 Badhai ho! Aapko 10% Extra Products Gift prapt honge!";
+    } else if (totalPv >= 301) {
+      offerText = "🎉 Super Offer! Aapko ₹450 Product Voucher + ₹750 Product Voucher + 10% Extra Products Gift sabhi milenge!";
+    }
+
+    if(offerText) {
+      $('#offerNotice').text(offerText).show();
+    } else {
+      $('#offerNotice').hide();
+    }
+  }
+
+  function downloadOrderPDF() {
+    let element = document.getElementById('printableInvoice');
+    let opt = {
+      margin:       0.5,
+      filename:     'Global_Success_Hub_Order.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+
   function addVideoField(containerId, desc, url) {
     let html = `
       <div class="vid-row" style="background:#f9f9f9; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #ddd;">
-        <input type="text" class="v-desc" placeholder="Video Description (Pehle likhein)" value="${desc}" style="margin-bottom:5px;">
-        <input type="url" class="v-url" placeholder="YouTube/FB Video URL" value="${url}">
+        <input type="text" class="v-desc" placeholder="Video Description" value="${desc}" style="margin-bottom:5px;">
+        <input type="url" class="v-url" placeholder="YouTube Video URL" value="${url}">
         <button type="button" onclick="$(this).parent().remove()" style="margin-top:5px; background:#dc3545; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Hataayein</button>
       </div>
     `;
@@ -806,9 +974,7 @@
   function loadVideoFields(containerId, items) {
     $('#' + containerId).empty();
     if(items && items.length > 0) {
-      items.forEach(i => {
-        addVideoField(containerId, i.desc || "", i.url || "");
-      });
+      items.forEach(i => { addVideoField(containerId, i.desc || "", i.url || ""); });
     } else {
       addVideoField(containerId, "", "");
     }
@@ -819,9 +985,7 @@
     $('#' + containerId + ' .vid-row').each(function() {
       let desc = $(this).find('.v-desc').val().trim();
       let url = $(this).find('.v-url').val().trim();
-      if(desc || url) {
-        list.push({ desc: desc, url: url });
-      }
+      if(desc || url) list.push({ desc: desc, url: url });
     });
     return JSON.stringify(list);
   }
@@ -832,11 +996,7 @@
     const adminPass = prompt("Admin Password दर्ज करें:");
     if (!adminPass) return;
 
-    const params = new URLSearchParams({
-      action: "adminLogin",
-      adminId: adminId,
-      adminPass: adminPass
-    });
+    const params = new URLSearchParams({ action: "adminLogin", adminId: adminId, adminPass: adminPass });
 
     fetch(SCRIPT_URL + "?" + params.toString())
     .then(res => res.json())
@@ -848,6 +1008,7 @@
         $('#admTime').val(cleanTimeString(resData.portal.time) || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
         $('#admBannerUrl').val(resData.portal.bannerUrl || "");
+        $('#admProductMaster').val(resData.portal.productMaster || "");
         $('#cropperContainer').hide();
 
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
@@ -861,9 +1022,7 @@
     });
   }
 
-  function closeAdminModal() {
-    $('#adminModal').hide();
-  }
+  function closeAdminModal() { $('#adminModal').hide(); }
 
   function handleAdminUpdate(e) {
     e.preventDefault();
@@ -876,6 +1035,7 @@
       newTime: $('#admTime').val(),
       newDuration: $('#admDuration').val(),
       bannerUrl: $('#admBannerUrl').val(),
+      productMaster: $('#admProductMaster').val(),
       businessPlans: gatherVideos('bpContainer'),
       productsInfo: gatherVideos('piContainer'),
       testimonials: gatherVideos('tsContainer')
