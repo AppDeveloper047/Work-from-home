@@ -251,25 +251,24 @@
       border: none;
     }
 
-    /* Order Billing Table Styles */
     .order-table-container {
       width: 100%;
-      overflow-x: auto;
       max-height: 400px;
       overflow-y: auto;
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-bottom: 15px;
+      background: #fff;
     }
     table.billing-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 12px;
       background: #fff;
       text-align: left;
     }
     table.billing-table th, table.billing-table td {
-      padding: 8px 10px;
+      padding: 6px 8px;
       border-bottom: 1px solid #eee;
       border-right: 1px solid #eee;
     }
@@ -283,27 +282,27 @@
     .summary-box {
       background: #f8f9fa;
       border: 2px dashed #11998e;
-      padding: 15px;
+      padding: 12px;
       border-radius: 10px;
       margin-bottom: 15px;
     }
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
       font-weight: bold;
       color: #333;
-      font-size: 14px;
+      font-size: 13px;
     }
     .offer-banner {
       background: linear-gradient(135deg, #f2994a, #f2c94c);
       color: #fff;
-      padding: 10px;
+      padding: 8px;
       border-radius: 8px;
       font-weight: bold;
       text-align: center;
       margin-bottom: 15px;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .logout-btn {
@@ -514,7 +513,7 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Products Master Management (Manual Add / Edit)</div>
+      <div class="admin-section-title">3. Products Master Management (Google Sheet Connected)</div>
       <div class="form-group">
         <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
         <div id="adminProductRowsContainer"></div>
@@ -536,7 +535,7 @@
         <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
+      <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें (Save to Sheet)</button>
     </form>
   </div>
 </div>
@@ -842,7 +841,10 @@
     }
 
     let html = `
-      <div id="printableInvoice">
+      <div id="printableInvoice" style="background:#fff; padding:15px; border-radius:10px;">
+        <h3 style="text-align:center; color:#11998e; margin-bottom:5px;">GLOBAL SUCCESS HUB - ORDER INVOICE</h3>
+        <p style="text-align:center; font-size:11px; color:#555; margin-bottom:15px;">Store Billing & Product Purchase Sheet</p>
+
         <div class="summary-box">
           <h4 style="margin:0 0 10px 0; color:#11998e; text-align:center;">📊 Order Summary & Margin Calculation</h4>
           <div class="summary-grid">
@@ -864,7 +866,7 @@
                 <th>Pack Size</th>
                 <th>PV</th>
                 <th>MRP (₹)</th>
-                <th>DP (With GST) (₹)</th>
+                <th>DP (₹)</th>
                 <th>Qty</th>
                 <th>Total MRP</th>
                 <th>Total DP</th>
@@ -883,7 +885,7 @@
           <td class="pv-val">${p.pv}</td>
           <td class="mrp-val">${p.mrp}</td>
           <td class="dp-val">${p.dp}</td>
-          <td><input type="number" min="0" value="0" class="qty-input" data-index="${idx}" style="width:60px; padding:4px;" oninput="calculateBilling()"></td>
+          <td><input type="number" min="0" value="0" class="qty-input" data-index="${idx}" style="width:50px; padding:3px; text-align:center;" oninput="calculateBilling()"></td>
           <td class="tot-mrp">0.00</td>
           <td class="tot-dp">0.00</td>
           <td class="tot-pv">0.00</td>
@@ -951,10 +953,10 @@
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
     let opt = {
-      margin:       0.5,
-      filename:     'Global_Success_Hub_Order.pdf',
+      margin:       0.3,
+      filename:     'Global_Success_Hub_Order_Invoice.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
+      html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
     };
     html2pdf().from(element).set(opt).save();
