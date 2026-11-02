@@ -254,7 +254,6 @@
 
     .order-table-container {
       width: 100%;
-      overflow-x: auto;
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-bottom: 15px;
@@ -263,12 +262,12 @@
     table.billing-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
       background: #fff;
       text-align: left;
     }
     table.billing-table th, table.billing-table td {
-      padding: 8px;
+      padding: 6px;
       border-bottom: 1px solid #eee;
       border-right: 1px solid #eee;
     }
@@ -279,27 +278,27 @@
     .summary-box {
       background: #f8f9fa;
       border: 2px dashed #11998e;
-      padding: 12px;
+      padding: 10px;
       border-radius: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 6px;
       font-weight: bold;
       color: #333;
-      font-size: 13px;
+      font-size: 12px;
     }
     .offer-banner {
       background: linear-gradient(135deg, #f2994a, #f2c94c);
       color: #fff;
-      padding: 10px;
+      padding: 8px;
       border-radius: 8px;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 15px;
-      font-size: 13px;
+      margin-bottom: 10px;
+      font-size: 12px;
     }
 
     .logout-btn {
@@ -331,7 +330,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 100%;
-      max-width: 650px;
+      max-width: 750px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -829,7 +828,7 @@
     $('#mainCategoryView').show();
   }
 
-  // Render Order & Billing Portal with Dropdown Rows
+  // Render Order & Billing Portal with Dropdown & Plus/Minus Qty
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
     if(products.length === 0) {
@@ -861,13 +860,13 @@
                 <th>Product Selection</th>
                 <th>Pack</th>
                 <th>PV</th>
-                <th>MRP (₹)</th>
-                <th>DP (₹)</th>
+                <th>MRP</th>
+                <th>DP</th>
                 <th>Qty</th>
-                <th>Total MRP</th>
-                <th>Total DP</th>
-                <th>Total PV</th>
-                <th>Action</th>
+                <th>Tot. MRP</th>
+                <th>Tot. DP</th>
+                <th>Tot. PV</th>
+                <th>Act</th>
               </tr>
             </thead>
             <tbody id="selectedProductsBody">
@@ -880,7 +879,7 @@
     `;
 
     container.html(html);
-    addSelectedProductRow(); // Add first default row
+    addSelectedProductRow();
   }
 
   function addSelectedProductRow() {
@@ -897,7 +896,13 @@
         <td class="r-pv">0</td>
         <td class="r-mrp">0</td>
         <td class="r-dp">0</td>
-        <td><input type="number" min="0" value="1" class="qty-input" style="width:50px; padding:3px; text-align:center;" oninput="calculateBilling()"></td>
+        <td>
+          <div style="display:flex; align-items:center; gap:2px;">
+            <button type="button" onclick="changeQty(this, -1)" style="padding:2px 6px; background:#ddd; border:none; cursor:pointer; font-weight:bold;">-</button>
+            <input type="number" min="0" value="1" class="qty-input" style="width:35px; padding:2px; text-align:center;" oninput="calculateBilling()">
+            <button type="button" onclick="changeQty(this, 1)" style="padding:2px 6px; background:#ddd; border:none; cursor:pointer; font-weight:bold;">+</button>
+          </div>
+        </td>
         <td class="tot-mrp">0.00</td>
         <td class="tot-dp">0.00</td>
         <td class="tot-pv">0.00</td>
@@ -905,6 +910,15 @@
       </tr>
     `;
     $('#selectedProductsBody').append(rowHtml);
+  }
+
+  function changeQty(btn, delta) {
+    let input = $(btn).siblings('.qty-input');
+    let val = parseInt(input.val()) || 0;
+    val += delta;
+    if(val < 0) val = 0;
+    input.val(val);
+    calculateBilling();
   }
 
   function updateRowDetails(selectElem) {
@@ -973,7 +987,7 @@
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
     let opt = {
-      margin:       0.3,
+      margin:       0.2,
       filename:     'Global_Success_Hub_Order_Invoice.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },
@@ -984,14 +998,14 @@
 
   function addProductRow(code, desc, pack, pv, mrp, dp) {
     let html = `
-      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 40px; gap:5px; margin-bottom:6px; background:#f9f9f9; padding:6px; border-radius:6px; border:1px solid #ddd;">
-        <input type="text" class="p-code" placeholder="Code" value="${code}">
-        <input type="text" class="p-desc" placeholder="Description" value="${desc}">
-        <input type="text" class="p-pack" placeholder="Pack" value="${pack}">
-        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}">
-        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}">
-        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}">
-        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">&times;</button>
+      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 40px; gap:8px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
+        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px;">
+        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px;">
+        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px;">
+        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px;">
+        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px;">
+        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px;">
+        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer; height:36px;">&times;</button>
       </div>
     `;
     $('#adminProductRowsContainer').append(html);
