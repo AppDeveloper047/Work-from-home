@@ -330,7 +330,7 @@
       border-radius: 12px;
       padding: 20px;
       width: 100%;
-      max-width: 750px;
+      max-width: 800px;
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -455,6 +455,10 @@
           <h3>⭐ Testimonials</h3>
           <p>Customer reviews & results</p>
         </div>
+        <div class="category-card" onclick="openCategory('successStory')" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+          <h3>🏆 Success Story</h3>
+          <p>Inspiring leader success stories</p>
+        </div>
         <div class="category-card" onclick="openCategory('productOrder')" style="background: linear-gradient(135deg, #f2994a, #f2c94c);">
           <h3>🛒 Product Order & Billing</h3>
           <p>Select products, calculate PV & Margin</p>
@@ -509,26 +513,31 @@
         <input type="number" id="admDuration" required placeholder="45">
       </div>
 
-      <div class="admin-section-title">3. Products Master Management</div>
-      <div class="form-group">
-        <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
-        <div id="adminProductRowsContainer"></div>
-        <button type="button" onclick="addProductRow('', '', '', '', '', '')" style="margin-top:8px; padding:6px 12px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">+ Naya Product Jodein</button>
-      </div>
-
-      <div class="admin-section-title">4. Business Plans Videos</div>
+      <div class="admin-section-title">3. Business Plans Videos</div>
       <div class="form-group"><div id="bpContainer"></div>
         <button type="button" onclick="addVideoField('bpContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <div class="admin-section-title">5. Products Information Videos</div>
+      <div class="admin-section-title">4. Products Information Videos</div>
       <div class="form-group"><div id="piContainer"></div>
         <button type="button" onclick="addVideoField('piContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <div class="admin-section-title">6. Product Testimonials Videos</div>
+      <div class="admin-section-title">5. Product Testimonials Videos</div>
       <div class="form-group"><div id="tsContainer"></div>
         <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
+      </div>
+
+      <div class="admin-section-title">6. Success Story Videos</div>
+      <div class="form-group"><div id="ssContainer"></div>
+        <button type="button" onclick="addVideoField('ssContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
+      </div>
+
+      <div class="admin-section-title">7. Products Master Management (A-Z Sorted)</div>
+      <div class="form-group">
+        <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
+        <div id="adminProductRowsContainer"></div>
+        <button type="button" onclick="addProductRow('', '', '', '', '', '')" style="margin-top:8px; padding:6px 12px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">+ Naya Product Jodein</button>
       </div>
 
       <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
@@ -546,6 +555,7 @@
     businessPlans: [],
     productsInfo: [],
     testimonials: [],
+    successStory: [],
     productMaster: []
   };
   let currentAdminId = "";
@@ -608,7 +618,13 @@
           try { portalData.businessPlans = JSON.parse(data.portal.businessPlans || "[]"); } catch(e) { portalData.businessPlans = []; }
           try { portalData.productsInfo = JSON.parse(data.portal.productsInfo || "[]"); } catch(e) { portalData.productsInfo = []; }
           try { portalData.testimonials = JSON.parse(data.portal.testimonials || "[]"); } catch(e) { portalData.testimonials = []; }
-          try { portalData.productMaster = JSON.parse(data.portal.productMaster || "[]"); } catch(e) { portalData.productMaster = []; }
+          try { portalData.successStory = JSON.parse(data.portal.successStory || "[]"); } catch(e) { portalData.successStory = []; }
+          
+          try { 
+            portalData.productMaster = JSON.parse(data.portal.productMaster || "[]");
+            // Sort products alphabetically A-Z by description
+            portalData.productMaster.sort((a, b) => (a.desc || "").localeCompare(b.desc || ""));
+          } catch(e) { portalData.productMaster = []; }
 
           updateMeetingCardDisplay();
           updateBannerDisplay();
@@ -801,6 +817,9 @@
     } else if(type === 'testimonials') {
       title = "⭐ Product Testimonials";
       items = portalData.testimonials;
+    } else if(type === 'successStory') {
+      title = "🏆 Success Stories";
+      items = portalData.successStory;
     }
 
     $('#subScreenTitle').text(title);
@@ -998,13 +1017,13 @@
 
   function addProductRow(code, desc, pack, pv, mrp, dp) {
     let html = `
-      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 40px; gap:8px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
-        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px;">
-        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px;">
-        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px;">
-        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px;">
-        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px;">
-        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px;">
+      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1.2fr 2fr 1fr 0.8fr 0.8fr 0.8fr 40px; gap:6px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
+        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px; font-size:13px;">
+        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px; font-size:13px;">
+        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px; font-size:13px;">
+        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px; font-size:13px;">
+        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px; font-size:13px;">
+        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px; font-size:13px;">
         <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer; height:36px;">&times;</button>
       </div>
     `;
@@ -1092,6 +1111,7 @@
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
         loadVideoFields('piContainer', resData.portal.productsInfo ? JSON.parse(resData.portal.productsInfo) : []);
         loadVideoFields('tsContainer', resData.portal.testimonials ? JSON.parse(resData.portal.testimonials) : []);
+        loadVideoFields('ssContainer', resData.portal.successStory ? JSON.parse(resData.portal.successStory) : []);
 
         $('#adminModal').css('display', 'flex');
       } else {
@@ -1116,7 +1136,8 @@
       productMaster: gatherAdminProducts(),
       businessPlans: gatherVideos('bpContainer'),
       productsInfo: gatherVideos('piContainer'),
-      testimonials: gatherVideos('tsContainer')
+      testimonials: gatherVideos('tsContainer'),
+      successStory: gatherVideos('ssContainer')
     };
 
     fetch(SCRIPT_URL, {
