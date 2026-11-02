@@ -67,7 +67,7 @@
     
     .banner-container {
       width: 100%;
-      height: 160px;
+      max-height: 200px;
       border-radius: 12px;
       overflow: hidden;
       margin-bottom: 15px;
@@ -77,9 +77,11 @@
     }
     .banner-container img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 200px;
+      object-fit: contain;
       display: block;
+      margin: 0 auto;
     }
 
     .top-meeting-card {
@@ -362,6 +364,28 @@
       border-bottom: 1px dashed #ddd;
       padding-bottom: 3px;
     }
+    .accordion-header {
+      background: #11998e;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+    .accordion-content {
+      display: none;
+      background: #fdfdfd;
+      border: 1px solid #11998e;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -486,17 +510,17 @@
     <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
     <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
       
-      <div class="admin-section-title">1. Advertisement Banner & Cropper</div>
+      <div class="admin-section-title">1. Advertisement Banner & HD Cropper</div>
       <div class="form-group">
         <label>Banner Photo Select Karein</label>
         <input type="file" id="admBannerFile" accept="image/*" onchange="initCropper(this)" style="padding:6px;">
         <input type="hidden" id="admBannerUrl">
       </div>
       <div id="cropperContainer" style="display:none; margin-top:10px; text-align:center;">
-        <div style="max-height:220px; overflow:hidden; background:#000; border-radius:8px;">
+        <div style="max-height:250px; overflow:hidden; background:#000; border-radius:8px;">
           <img id="imageToCrop" src="" style="max-width:100%; display:block; margin:0 auto;">
         </div>
-        <button type="button" onclick="cropImage()" style="margin-top:10px; background:#11998e; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Crop & Confirm Banner</button>
+        <button type="button" onclick="cropImage()" style="margin-top:10px; background:#11998e; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Crop & Confirm HD Banner</button>
       </div>
 
       <div class="admin-section-title">2. Meeting Timing & Link</div>
@@ -533,11 +557,20 @@
         <button type="button" onclick="addVideoField('ssContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
       </div>
 
-      <div class="admin-section-title">7. Products Master Management (A-Z Sorted)</div>
-      <div class="form-group">
-        <label>Products List (CODE, DESC, PACK, PV, MRP, DP)</label>
+      <!-- Collapsible Products Master Menubar with Top Search & Add Button -->
+      <div class="accordion-header" onclick="toggleProductsAccordion()">
+        <span>📦 Products Master Management (A-Z)</span>
+        <span id="accordionIcon">▼</span>
+      </div>
+      <div id="productsAccordionContent" class="accordion-content">
+        <div class="form-group">
+          <label>🔍 Product Search (Code ya Description se turant khojein)</label>
+          <input type="text" id="adminProductSearch" placeholder="Type Product Code or Name..." oninput="filterAdminProducts(this.value)" style="margin-bottom: 10px; background: #fff;">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <button type="button" onclick="addProductRow('', '', '', '', '', '', true)" style="padding:9px 15px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; width:100%;">+ Naya Product Jodein (Sabse Upar)</button>
+        </div>
         <div id="adminProductRowsContainer"></div>
-        <button type="button" onclick="addProductRow('', '', '', '', '', '')" style="margin-top:8px; padding:6px 12px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">+ Naya Product Jodein</button>
       </div>
 
       <button type="submit" class="btn-submit" style="background: linear-gradient(45deg, #11998e, #38ef7d); margin-top: 20px;">सेटिंग्स सेव करें</button>
@@ -622,7 +655,6 @@
           
           try { 
             portalData.productMaster = JSON.parse(data.portal.productMaster || "[]");
-            // Sort products alphabetically A-Z by description
             portalData.productMaster.sort((a, b) => (a.desc || "").localeCompare(b.desc || ""));
           } catch(e) { portalData.productMaster = []; }
 
@@ -690,7 +722,7 @@
         imageElement.src = e.target.result;
         $('#cropperContainer').show();
         if (cropperInstance) cropperInstance.destroy();
-        cropperInstance = new Cropper(imageElement, { aspectRatio: 16 / 5, viewMode: 1, autoCropArea: 1 });
+        cropperInstance = new Cropper(imageElement, { aspectRatio: 16 / 9, viewMode: 1, autoCropArea: 1 });
       };
       reader.readAsDataURL(file);
     }
@@ -698,11 +730,11 @@
 
   function cropImage() {
     if (cropperInstance) {
-      let canvas = cropperInstance.getCroppedCanvas({ width: 800, height: 250 });
-      let croppedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      let canvas = cropperInstance.getCroppedCanvas({ width: 1200, height: 675 });
+      let croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
       $('#admBannerUrl').val(croppedDataUrl);
       $('#cropperContainer').hide();
-      alert("Banner successfully cropped!");
+      alert("HD Banner successfully cropped!");
     }
   }
 
@@ -1015,7 +1047,19 @@
     html2pdf().from(element).set(opt).save();
   }
 
-  function addProductRow(code, desc, pack, pv, mrp, dp) {
+  function toggleProductsAccordion() {
+    let content = $('#productsAccordionContent');
+    let icon = $('#accordionIcon');
+    if (content.is(':visible')) {
+      content.slideUp();
+      icon.text('▼');
+    } else {
+      content.slideDown();
+      icon.text('▲');
+    }
+  }
+
+  function addProductRow(code, desc, pack, pv, mrp, dp, prepend = false) {
     let html = `
       <div class="prod-admin-row" style="display:grid; grid-template-columns: 1.2fr 2fr 1fr 0.8fr 0.8fr 0.8fr 40px; gap:6px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
         <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px; font-size:13px;">
@@ -1027,7 +1071,11 @@
         <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer; height:36px;">&times;</button>
       </div>
     `;
-    $('#adminProductRowsContainer').append(html);
+    if(prepend) {
+      $('#adminProductRowsContainer').prepend(html);
+    } else {
+      $('#adminProductRowsContainer').append(html);
+    }
   }
 
   function loadAdminProductRows(products) {
@@ -1039,6 +1087,19 @@
     } else {
       addProductRow("", "", "", "", "", "");
     }
+  }
+
+  function filterAdminProducts(query) {
+    let q = query.toLowerCase().trim();
+    $('#adminProductRowsContainer .prod-admin-row').each(function() {
+      let code = $(this).find('.p-code').val().toLowerCase();
+      let desc = $(this).find('.p-desc').val().toLowerCase();
+      if(code.includes(q) || desc.includes(q)) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
   }
 
   function gatherAdminProducts() {
