@@ -46,6 +46,64 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Top APK Download Banner */
+    .top-apk-banner {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .apk-download-btn {
+      background: white;
+      color: #11998e;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Bada Slider Banner Style (Badi Size & Clear View) */
+    .banner-slider-container {
+      width: 100%;
+      height: 280px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      background: #000;
+      position: relative;
+      display: none;
+    }
+    .banner-slide {
+      width: 100%;
+      height: 100%;
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      animation: fadeSlide 0.8s ease-in-out;
+    }
+    .banner-slide.active {
+      display: block;
+    }
+    .banner-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
     .brand-title {
       text-align: center;
       font-size: 24px;
@@ -63,25 +121,6 @@
       color: #555;
       margin-bottom: 15px;
       font-weight: 600;
-    }
-    
-    .banner-container {
-      width: 100%;
-      max-height: 200px;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      background: #000;
-      display: none;
-    }
-    .banner-container img {
-      width: 100%;
-      height: auto;
-      max-height: 200px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
     }
 
     .top-meeting-card {
@@ -106,53 +145,13 @@
       border-radius: 8px;
     }
 
-    .auth-box {
-      max-width: 420px;
-      margin: 0 auto;
-    }
-    .tabs {
-      display: flex;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #eee;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: none;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      color: #888;
-      transition: all 0.3s ease;
-    }
-    .tab-btn.active {
-      color: #ff416c;
-      border-bottom: 3px solid #ff416c;
-    }
-    .form-group {
-      margin-bottom: 12px;
-    }
-    label {
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 600;
-      color: #444;
-      font-size: 13px;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      background: #fff;
-    }
-    input:focus, select:focus {
-      border-color: #ff416c;
-      box-shadow: 0 0 5px rgba(255, 65, 108, 0.3);
-    }
+    .auth-box { max-width: 420px; margin: 0 auto; }
+    .tabs { display: flex; margin-bottom: 15px; border-bottom: 2px solid #eee; }
+    .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-size: 14px; font-weight: bold; cursor: pointer; color: #888; }
+    .tab-btn.active { color: #ff416c; border-bottom: 3px solid #ff416c; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; margin-bottom: 4px; font-weight: 600; color: #444; font-size: 13px; }
+    input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; background: #fff; }
     button.btn-submit {
       width: 100%;
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
@@ -164,25 +163,8 @@
       cursor: pointer;
       font-weight: bold;
       margin-top: 8px;
-      transition: transform 0.2s;
     }
-    button.btn-submit:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    .admin-link {
-      display: block;
-      text-align: center;
-      margin-top: 15px;
-      color: #777;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .admin-link:hover {
-      color: #ff416c;
-      text-decoration: underline;
-    }
+    .admin-link { display: block; text-align: center; margin-top: 15px; color: #777; text-decoration: none; font-size: 12px; }
 
     .category-grid {
       display: grid;
@@ -198,202 +180,50 @@
       text-align: center;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    .category-card:hover {
-      transform: translateY(-3px);
-      opacity: 0.95;
     }
     .category-card h3 { margin: 0 0 5px 0; font-size: 16px; }
     .category-card p { margin: 0; font-size: 11px; opacity: 0.9; }
 
-    .sub-screen {
-      display: none;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    .back-btn {
-      background: #6c757d;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
+    .sub-screen { display: none; }
+    .back-btn { background: #6c757d; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 15px; }
 
-    .video-card {
-      background: #fff;
-      border: 1px solid #e1e1e1;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .video-desc {
-      font-size: 15px;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 10px;
-      border-left: 4px solid #ff416c;
-      padding-left: 8px;
-    }
-    .video-frame {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
-      border-radius: 6px;
-      overflow: hidden;
-      background: #000;
-    }
-    .video-frame iframe {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      border: none;
-    }
+    .video-card { background: #fff; border: 1px solid #e1e1e1; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+    .video-desc { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 10px; border-left: 4px solid #ff416c; padding-left: 8px; }
+    .video-frame { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 6px; overflow: hidden; background: #000; }
+    .video-frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    .order-table-container {
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      background: #fff;
-    }
-    table.billing-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11px;
-      background: #fff;
-      text-align: left;
-    }
-    table.billing-table th, table.billing-table td {
-      padding: 6px;
-      border-bottom: 1px solid #eee;
-      border-right: 1px solid #eee;
-    }
-    table.billing-table th {
-      background: #11998e;
-      color: white;
-    }
-    .summary-box {
-      background: #f8f9fa;
-      border: 2px dashed #11998e;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 6px;
-      font-weight: bold;
-      color: #333;
-      font-size: 12px;
-    }
-    .offer-banner {
-      background: linear-gradient(135deg, #f2994a, #f2c94c);
-      color: #fff;
-      padding: 8px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 12px;
-    }
+    .order-table-container { width: 100%; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; background: #fff; }
+    table.billing-table { width: 100%; border-collapse: collapse; font-size: 11px; background: #fff; text-align: left; }
+    table.billing-table th, table.billing-table td { padding: 6px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; }
+    table.billing-table th { background: #11998e; color: white; }
+    .summary-box { background: #f8f9fa; border: 2px dashed #11998e; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 6px; font-weight: bold; color: #333; font-size: 12px; }
+    .offer-banner { background: linear-gradient(135deg, #f2994a, #f2c94c); color: #fff; padding: 8px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 12px; }
 
-    .logout-btn {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      width: 100%;
-      margin-top: 10px;
-    }
+    .logout-btn { background: #dc3545; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; width: 100%; margin-top: 10px; }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 15px;
-    }
-    .modal-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      width: 100%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      position: relative;
-    }
-    .modal-header {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ff416c;
-      margin-bottom: 15px;
-      text-align: center;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 8px;
-    }
-    .close-btn {
-      position: absolute;
-      top: 12px; right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-      color: #999;
-      font-weight: bold;
-    }
-    .admin-section-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #11998e;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      border-bottom: 1px dashed #ddd;
-      padding-bottom: 3px;
-    }
-    .accordion-header {
-      background: #11998e;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-    }
-    .accordion-content {
-      display: none;
-      background: #fdfdfd;
-      border: 1px solid #11998e;
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      padding: 12px;
-      margin-bottom: 15px;
-    }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .modal-card { background: #fff; border-radius: 12px; padding: 20px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-header { font-size: 18px; font-weight: 700; color: #ff416c; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .close-btn { position: absolute; top: 12px; right: 15px; font-size: 20px; cursor: pointer; color: #999; font-weight: bold; }
+    .admin-section-title { font-size: 14px; font-weight: 700; color: #11998e; margin-top: 15px; margin-bottom: 5px; border-bottom: 1px dashed #ddd; padding-bottom: 3px; }
+    .accordion-header { background: #11998e; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+    .accordion-content { display: none; background: #fdfdfd; border: 1px solid #11998e; border-top: none; border-radius: 0 0 8px 8px; padding: 12px; margin-bottom: 15px; }
   </style>
 </head>
 <body>
 
 <div class="container">
   
-  <div id="bannerBox" class="banner-container">
-    <img id="bannerImg" src="" alt="Advertisement Banner">
+  <!-- Top App Download Banner -->
+  <div class="top-apk-banner">
+    <span>📱 Global Success Hub Official App</span>
+    <a id="topApkLinkBtn" href="#" class="apk-download-btn" download>Download APK</a>
+  </div>
+
+  <!-- Bada Auto-Scrolling Banner Slider (1 to 10 photos) -->
+  <div id="bannerSliderContainer" class="banner-slider-container">
+    <!-- Slides will be injected dynamically -->
   </div>
 
   <div class="brand-title">Global Success Hub</div>
@@ -427,26 +257,11 @@
     </form>
 
     <form id="signupForm" onsubmit="handleSignUp(event)" style="display: none;">
-      <div class="form-group">
-        <label>पूरा नाम</label>
-        <input type="text" id="regName" required placeholder="अपना नाम दर्ज करें">
-      </div>
-      <div class="form-group">
-        <label>मोबाइल नंबर</label>
-        <input type="tel" id="regMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
-      </div>
-      <div class="form-group">
-        <label>पता / स्थान</label>
-        <input type="text" id="regAddress" required placeholder="शहर या गांव का नाम">
-      </div>
-      <div class="form-group">
-        <label>रेफरल मोबाइल नंबर (इनवाइट करने वाले का)</label>
-        <input type="tel" id="regReferral" pattern="[0-9]{10}" placeholder="10 अंकों का मोबाइल नंबर">
-      </div>
-      <div class="form-group">
-        <label>पासवर्ड बनाएं</label>
-        <input type="password" id="regPassword" required placeholder="पासवर्ड बनाएं">
-      </div>
+      <div class="form-group"><label>पूरा नाम</label><input type="text" id="regName" required placeholder="अपना नाम दर्ज करें"></div>
+      <div class="form-group"><label>मोबाइल नंबर</label><input type="tel" id="regMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर"></div>
+      <div class="form-group"><label>पता / स्थान</label><input type="text" id="regAddress" required placeholder="शहर या गांव का नाम"></div>
+      <div class="form-group"><label>रेफरल मोबाइल नंबर</label><input type="tel" id="regReferral" pattern="[0-9]{10}" placeholder="10 अंकों का मोबाइल नंबर"></div>
+      <div class="form-group"><label>पासवर्ड बनाएं</label><input type="password" id="regPassword" required placeholder="पासवर्ड बनाएं"></div>
       <button type="submit" class="btn-submit">रजिस्टर करें</button>
     </form>
 
@@ -467,36 +282,16 @@
     <div id="mainCategoryView">
       <h3 style="color: #333; margin-bottom: 12px; font-size: 16px;">📂 पोर्टल मेन्यू (Categories & Order)</h3>
       <div class="category-grid">
-        <div class="category-card" onclick="openCategory('businessPlans')">
-          <h3>📈 Business Plans</h3>
-          <p>Different languages & plans</p>
-        </div>
-        <div class="category-card" onclick="openCategory('productsInfo')">
-          <h3>🛍️ Products Info</h3>
-          <p>Explore product videos</p>
-        </div>
-        <div class="category-card" onclick="openCategory('testimonials')">
-          <h3>⭐ Testimonials</h3>
-          <p>Customer reviews & results</p>
-        </div>
-        <div class="category-card" onclick="openCategory('successStory')" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
-          <h3>🏆 Success Story</h3>
-          <p>Inspiring leader success stories</p>
-        </div>
-        <div class="category-card" onclick="openCategory('productOrder')" style="background: linear-gradient(135deg, #f2994a, #f2c94c);">
-          <h3>🛒 Product Order & Billing</h3>
-          <p>Select products, calculate PV & Margin</p>
-        </div>
-        <div class="category-card" onclick="shareApp()" style="background: linear-gradient(135deg, #2b5876, #4e4376);">
-          <h3>📤 Share App</h3>
-          <p>Apni team aur dosto ko share karein</p>
-        </div>
+        <div class="category-card" onclick="openCategory('businessPlans')"><h3>📈 Business Plans</h3><p>Different languages & plans</p></div>
+        <div class="category-card" onclick="openCategory('productsInfo')"><h3>🛍️ Products Info</h3><p>Explore product videos</p></div>
+        <div class="category-card" onclick="openCategory('testimonials')"><h3>⭐ Testimonials</h3><p>Customer reviews & results</p></div>
+        <div class="category-card" onclick="openCategory('successStory')" style="background: linear-gradient(135deg, #11998e, #38ef7d);"><h3>🏆 Success Story</h3><p>Inspiring leader success stories</p></div>
+        <div class="category-card" onclick="openCategory('productOrder')" style="background: linear-gradient(135deg, #f2994a, #f2c94c);"><h3>🛒 Product Order & Billing</h3><p>Select products, calculate PV & Margin</p></div>
+        <div class="category-card" onclick="shareApp()" style="background: linear-gradient(135deg, #2b5876, #4e4376);"><h3>📤 Share App</h3><p>Apni team aur dosto ko share karein</p></div>
       </div>
-
       <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
     </div>
 
-    <!-- Sub Screens -->
     <div id="subScreenView" class="sub-screen">
       <button onclick="closeCategory()" class="back-btn">⬅️ वापस जाएं (Back)</button>
       <h2 id="subScreenTitle" style="color: #333; margin-top: 0; font-size: 20px;"></h2>
@@ -514,66 +309,39 @@
     <div class="modal-header">⚙️ एडमिन कंट्रोल पैनल</div>
     <form id="adminSettingsForm" onsubmit="handleAdminUpdate(event)">
       
-      <div class="admin-section-title">1. Advertisement Banner & HD Cropper</div>
-      <div class="form-group">
-        <label>Banner Photo Select Karein</label>
-        <input type="file" id="admBannerFile" accept="image/*" onchange="initCropper(this)" style="padding:6px;">
-        <input type="hidden" id="admBannerUrl">
-      </div>
-      <div id="cropperContainer" style="display:none; margin-top:10px; text-align:center;">
-        <div style="max-height:250px; overflow:hidden; background:#000; border-radius:8px;">
-          <img id="imageToCrop" src="" style="max-width:100%; display:block; margin:0 auto;">
-        </div>
-        <button type="button" onclick="cropImage()" style="margin-top:10px; background:#11998e; color:#fff; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">Crop & Confirm HD Banner</button>
-      </div>
+      <div class="admin-section-title">1. APK Download Link Update</div>
+      <div class="form-group"><label>APK File Download URL</label><input type="url" id="admApkLink" placeholder="https://..."></div>
 
-      <div class="admin-section-title">2. Meeting Timing & Link</div>
-      <div class="form-group">
-        <label>Zoom / Meet Link</label>
-        <input type="url" id="admLink" required placeholder="https://zoom.us/j/...">
-      </div>
-      <div class="form-group">
-        <label>Meeting Start Time</label>
-        <input type="time" id="admTime" required style="cursor: pointer; padding: 8px;">
-      </div>
-      <div class="form-group">
-        <label>Meeting Duration (Minutes)</label>
-        <input type="number" id="admDuration" required placeholder="45">
-      </div>
+      <!-- Multiple Banners Management (1 to 10 Photos) -->
+      <div class="admin-section-title">2. Multiple Banner Images (1 to 10 Photos - Auto Scroll 5s)</div>
+      <div id="bannerContainerAdmin"></div>
+      <button type="button" onclick="addBannerField('')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Banner URL Jodein</button>
 
-      <div class="admin-section-title">3. Business Plans Videos</div>
-      <div class="form-group"><div id="bpContainer"></div>
-        <button type="button" onclick="addVideoField('bpContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
-      </div>
+      <div class="admin-section-title">3. Meeting Timing & Link</div>
+      <div class="form-group"><label>Zoom / Meet Link</label><input type="url" id="admLink" required placeholder="https://zoom.us/j/..."></div>
+      <div class="form-group"><label>Meeting Start Time</label><input type="time" id="admTime" required style="padding: 8px;"></div>
+      <div class="form-group"><label>Meeting Duration (Minutes)</label><input type="number" id="admDuration" required placeholder="45"></div>
 
-      <div class="admin-section-title">4. Products Information Videos</div>
-      <div class="form-group"><div id="piContainer"></div>
-        <button type="button" onclick="addVideoField('piContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
-      </div>
+      <div class="admin-section-title">4. Business Plans Videos</div>
+      <div class="form-group"><div id="bpContainer"></div><button type="button" onclick="addVideoField('bpContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button></div>
 
-      <div class="admin-section-title">5. Product Testimonials Videos</div>
-      <div class="form-group"><div id="tsContainer"></div>
-        <button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
-      </div>
+      <div class="admin-section-title">5. Products Information Videos</div>
+      <div class="form-group"><div id="piContainer"></div><button type="button" onclick="addVideoField('piContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button></div>
 
-      <div class="admin-section-title">6. Success Story Videos</div>
-      <div class="form-group"><div id="ssContainer"></div>
-        <button type="button" onclick="addVideoField('ssContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button>
-      </div>
+      <div class="admin-section-title">6. Product Testimonials Videos</div>
+      <div class="form-group"><div id="tsContainer"></div><button type="button" onclick="addVideoField('tsContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button></div>
 
-      <!-- Collapsible Products Master Menubar with Top Search & Add Button -->
+      <div class="admin-section-title">7. Success Story Videos</div>
+      <div class="form-group"><div id="ssContainer"></div><button type="button" onclick="addVideoField('ssContainer', '', '')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Video Jodein</button></div>
+
+      <!-- Products Master Management -->
       <div class="accordion-header" onclick="toggleProductsAccordion()">
         <span>📦 Products Master Management (A-Z)</span>
         <span id="accordionIcon">▼</span>
       </div>
       <div id="productsAccordionContent" class="accordion-content">
-        <div class="form-group">
-          <label>🔍 Product Search (Code ya Description se turant khojein)</label>
-          <input type="text" id="adminProductSearch" placeholder="Type Product Code or Name..." oninput="filterAdminProducts(this.value)" style="margin-bottom: 10px; background: #fff;">
-        </div>
-        <div style="margin-bottom: 12px;">
-          <button type="button" onclick="addProductRow('', '', '', '', '', '', true)" style="padding:9px 15px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; width:100%;">+ Naya Product Jodein (Sabse Upar)</button>
-        </div>
+        <div class="form-group"><label>🔍 Product Search</label><input type="text" id="adminProductSearch" placeholder="Type Code or Name..." oninput="filterAdminProducts(this.value)" style="margin-bottom: 10px; background: #fff;"></div>
+        <div style="margin-bottom: 12px;"><button type="button" onclick="addProductRow('', '', '', '', '', '', true)" style="padding:9px 15px; background:#11998e; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer; width:100%;">+ Naya Product Jodein</button></div>
         <div id="adminProductRowsContainer"></div>
       </div>
 
@@ -586,9 +354,10 @@
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
   let portalData = {
     link: "",
+    apkLink: "",
     time: "20:30",
     duration: "45",
-    bannerUrl: "",
+    banners: [],
     businessPlans: [],
     productsInfo: [],
     testimonials: [],
@@ -597,7 +366,7 @@
   };
   let currentAdminId = "";
   let currentAdminPass = "";
-  let cropperInstance = null;
+  let bannerInterval = null;
 
   $(document).ready(function() {
     fetchPortalData();
@@ -633,12 +402,6 @@
     let str = timeStr.toString();
     let match = str.match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
     if (match) return match[0];
-    let d = new Date(str);
-    if (!isNaN(d.getTime())) {
-      let h = String(d.getHours()).padStart(2, '0');
-      let m = String(d.getMinutes()).padStart(2, '0');
-      return h + ":" + m;
-    }
     return "20:30";
   }
 
@@ -648,10 +411,11 @@
       .then(data => {
         if(data.success && data.portal) {
           portalData.link = data.portal.link || "";
+          portalData.apkLink = data.portal.apkLink || "";
           portalData.time = cleanTimeString(data.portal.time);
           portalData.duration = data.portal.duration || "45";
-          portalData.bannerUrl = data.portal.bannerUrl || "";
 
+          try { portalData.banners = JSON.parse(data.portal.banners || "[]"); } catch(e) { portalData.banners = []; }
           try { portalData.businessPlans = JSON.parse(data.portal.businessPlans || "[]"); } catch(e) { portalData.businessPlans = []; }
           try { portalData.productsInfo = JSON.parse(data.portal.productsInfo || "[]"); } catch(e) { portalData.productsInfo = []; }
           try { portalData.testimonials = JSON.parse(data.portal.testimonials || "[]"); } catch(e) { portalData.testimonials = []; }
@@ -663,18 +427,44 @@
           } catch(e) { portalData.productMaster = []; }
 
           updateMeetingCardDisplay();
-          updateBannerDisplay();
+          updateTopApkBanner();
+          renderBannerSlider();
         }
       })
       .catch(err => console.log("Fetch error:", err));
   }
 
-  function updateBannerDisplay() {
-    if(portalData.bannerUrl) {
-      $('#bannerImg').attr('src', portalData.bannerUrl);
-      $('#bannerBox').show();
+  function updateTopApkBanner() {
+    if(portalData.apkLink) {
+      $('#topApkLinkBtn').attr('href', portalData.apkLink);
+      $('.top-apk-banner').show();
+    }
+  }
+
+  // Render Multiple Banners with 5-Second Auto-Scroll Interval
+  function renderBannerSlider() {
+    let container = $('#bannerSliderContainer');
+    container.empty();
+    if (bannerInterval) clearInterval(bannerInterval);
+
+    if (portalData.banners && portalData.banners.length > 0) {
+      portalData.banners.forEach((url, idx) => {
+        let activeClass = idx === 0 ? 'active' : '';
+        container.append(`<div class="banner-slide ${activeClass}"><img src="${url}" alt="Banner"></div>`);
+      });
+      container.show();
+
+      let currentIndex = 0;
+      let slides = container.find('.banner-slide');
+      if (slides.length > 1) {
+        bannerInterval = setInterval(() => {
+          slides.eq(currentIndex).removeClass('active');
+          currentIndex = (currentIndex + 1) % slides.length;
+          slides.eq(currentIndex).addClass('active');
+        }, 5000); // 5 Seconds interval
+      }
     } else {
-      $('#bannerBox').hide();
+      container.hide();
     }
   }
 
@@ -684,170 +474,73 @@
     let parts = clean.split(':');
     let h = parseInt(parts[0], 10);
     let m = parseInt(parts[1], 10);
-    if (isNaN(h) || isNaN(m)) return timeStr;
-
     let ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12;
-    h = h ? h : 12;
-    let mStr = m < 10 ? '0' + m : m;
-    return h + ':' + mStr + ' ' + ampm;
+    h = h % 12; h = h ? h : 12;
+    return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
   }
 
   function updateMeetingCardDisplay() {
     let startTime24 = portalData.time || "20:30";
     let durationMin = parseInt(portalData.duration, 10) || 45;
-
     let parts = startTime24.split(':');
-    let startH = parseInt(parts[0], 10) || 0;
-    let startM = parseInt(parts[1], 10) || 0;
-
-    let totalStartMin = startH * 60 + startM;
+    let totalStartMin = (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
     let totalEndMin = totalStartMin + durationMin;
     let endH = Math.floor(totalEndMin / 60) % 24;
     let endM = totalEndMin % 60;
     let endTime24 = String(endH).padStart(2, '0') + ":" + String(endM).padStart(2, '0');
 
-    let startFormatted = format12Hour(startTime24);
-    let endFormatted = format12Hour(endTime24);
-
-    $('#authStartTime').text("Start: " + startFormatted);
-    $('#authEndTime').text("End: " + endFormatted);
-
-    $('#dashStartTime').text("शुरू होने का समय: " + startFormatted);
-    $('#dashEndTime').text("समाप्ति समय: " + endFormatted);
-  }
-
-  function initCropper(element) {
-    let file = element.files[0];
-    if (file) {
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let imageElement = document.getElementById('imageToCrop');
-        imageElement.src = e.target.result;
-        $('#cropperContainer').show();
-        if (cropperInstance) cropperInstance.destroy();
-        cropperInstance = new Cropper(imageElement, { aspectRatio: 16 / 9, viewMode: 1, autoCropArea: 1 });
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  function cropImage() {
-    if (cropperInstance) {
-      let canvas = cropperInstance.getCroppedCanvas({ width: 1200, height: 675 });
-      let croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
-      $('#admBannerUrl').val(croppedDataUrl);
-      $('#cropperContainer').hide();
-      alert("HD Banner successfully cropped!");
-    }
-  }
-
-  function getEmbedUrl(url) {
-    if (!url) return "";
-    let cleanUrl = url.trim();
-    if (cleanUrl.includes("embed/")) return cleanUrl;
-    let videoId = "";
-    if (cleanUrl.includes("watch?v=")) videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
-    else if (cleanUrl.includes("youtu.be/")) videoId = cleanUrl.split("youtu.be/")[1].split("?")[0];
-    else if (cleanUrl.includes("m.youtube.com/watch?v=")) videoId = cleanUrl.split("watch?v=")[1].split("&")[0];
-    else if (cleanUrl.includes("/shorts/")) videoId = cleanUrl.split("/shorts/")[1].split("?")[0];
-    if (videoId) return "https://www.youtube.com/embed/" + videoId;
-    return cleanUrl;
+    $('#authStartTime').text("Start: " + format12Hour(startTime24));
+    $('#authEndTime').text("End: " + format12Hour(endTime24));
+    $('#dashStartTime').text("शुरू होने का समय: " + format12Hour(startTime24));
+    $('#dashEndTime').text("समाप्ति समय: " + format12Hour(endTime24));
   }
 
   function handleSignUp(e) {
     e.preventDefault();
     const refVal = $('#regReferral').val().trim() || "Direct / Self";
-    const params = new URLSearchParams({
-      action: "signup",
-      name: $('#regName').val(),
-      mobile: $('#regMobile').val(),
-      address: $('#regAddress').val(),
-      referral: refVal,
-      password: $('#regPassword').val()
-    });
+    const params = new URLSearchParams({ action: "signup", name: $('#regName').val(), mobile: $('#regMobile').val(), address: $('#regAddress').val(), referral: refVal, password: $('#regPassword').val() });
 
-    fetch(SCRIPT_URL + "?" + params.toString())
-    .then(res => res.json())
-    .then(data => {
-      if(data.success) {
-        speakText("Aapne apna registration safalta purvak kar liya hai. Ab kripya sign in karein.");
-        alert(data.message);
-        switchTab('signin');
-        $('#loginMobile').val($('#regMobile').val());
-        $('#signupForm')[0].reset();
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch(err => alert("Connection error: " + err));
+    fetch(SCRIPT_URL + "?" + params.toString()).then(res => res.json()).then(data => {
+      if(data.success) { alert(data.message); switchTab('signin'); $('#loginMobile').val($('#regMobile').val()); $('#signupForm')[0].reset(); }
+      else { alert(data.message); }
+    });
   }
 
   function handleSignIn(e) {
     e.preventDefault();
-    const mobile = $('#loginMobile').val();
-    const params = new URLSearchParams({
-      action: "signin",
-      mobile: mobile,
-      password: $('#loginPassword').val()
+    const params = new URLSearchParams({ action: "signin", mobile: $('#loginMobile').val(), password: $('#loginPassword').val() });
+    fetch(SCRIPT_URL + "?" + params.toString()).then(res => res.json()).then(data => {
+      if(data.success) { localStorage.setItem("gsh_user", JSON.stringify(data.user)); showDashboard(); }
+      else { alert(data.message); }
     });
-
-    speakText("आपका अकाउंट मीटिंग हेतु लॉगिन किया जा रहा है। आपकी सफलता हेतु आपको अग्रिम बधाइयां।");
-
-    fetch(SCRIPT_URL + "?" + params.toString())
-    .then(res => res.json())
-    .then(data => {
-      if(data.success) {
-        localStorage.setItem("gsh_user", JSON.stringify(data.user));
-        setTimeout(function() { showDashboard(); }, 2000);
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch(err => alert("Connection error: " + err));
   }
 
-  function checkPersistentLogin() {
-    const savedUser = localStorage.getItem("gsh_user");
-    if(savedUser) showDashboard();
-  }
+  function checkPersistentLogin() { if(localStorage.getItem("gsh_user")) showDashboard(); }
+  function showDashboard() { $('#authSection').hide(); $('#dashboardSection').show(); }
+  function handleLogout() { localStorage.removeItem("gsh_user"); $('#dashboardSection').show(); $('#authSection').show(); }
 
-  function showDashboard() {
-    $('#authSection').hide();
-    $('#dashboardSection').show();
-  }
-
-  function handleLogout() {
-    localStorage.removeItem("gsh_user");
-    $('#dashboardSection').hide();
-    $('#authSection').show();
-  }
-
+  // Direct Meeting Join (No link prompt view, opens directly)
   function joinMeeting() {
-    if(portalData.link) window.open(portalData.link, '_blank');
-    else alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
+    if(portalData.link) {
+      window.location.href = portalData.link; // Direct join without intermediate screen
+    } else {
+      alert("मीटिंग लिंक उपलब्ध नहीं है।");
+    }
   }
 
   function shareApp() {
-    const appLink = window.location.href;
+    const appLink = portalData.apkLink || window.location.href;
     if (navigator.share) {
-      navigator.share({
-        title: 'Global Success Hub',
-        text: 'Global Success Hub ke official MLM app ko download karne ke liye yahan click karein:',
-        url: appLink,
-      })
-      .then(() => console.log('Successfully shared'))
-      .catch((error) => console.log('Error sharing:', error));
+      navigator.share({ title: 'Global Success Hub APK', text: 'Download app:', url: appLink });
     } else {
       navigator.clipboard.writeText(appLink);
-      alert("App link copied to clipboard! Aap ise kahin bhi paste karke share kar sakte hain.");
+      alert("App download link copy ho gaya hai!");
     }
   }
 
   function openCategory(type) {
     $('#mainCategoryView').hide();
     $('#subScreenView').show();
-
     let title = "";
     const contentBox = $('#subScreenContent');
     contentBox.empty();
@@ -859,61 +552,31 @@
       return;
     }
 
-    let items = [];
-    if(type === 'businessPlans') {
-      title = "📈 Business Plan Videos";
-      items = portalData.businessPlans;
-    } else if(type === 'productsInfo') {
-      title = "🛍️ Products Information Videos";
-      items = portalData.productsInfo;
-    } else if(type === 'testimonials') {
-      title = "⭐ Product Testimonials";
-      items = portalData.testimonials;
-    } else if(type === 'successStory') {
-      title = "🏆 Success Stories";
-      items = portalData.successStory;
-    }
-
-    $('#subScreenTitle').text(title);
-    if(items.length === 0) {
-      contentBox.html('<p style="text-align:center; color:#666;">Yahan koi video uplabdh nahi hai. Admin panel se add karein.</p>');
-      return;
-    }
-
+    let items = type === 'businessPlans' ? portalData.businessPlans : type === 'productsInfo' ? portalData.productsInfo : type === 'testimonials' ? portalData.testimonials : portalData.successStory;
+    $('#subScreenTitle').text(type === 'businessPlans' ? "📈 Business Plan" : type === 'productsInfo' ? "🛍️ Products Info" : type === 'testimonials' ? "⭐ Testimonials" : "🏆 Success Story");
+    
+    if(items.length === 0) { contentBox.html('<p style="text-align:center; color:#666;">Yahan koi video uplabdh nahi hai.</p>'); return; }
     items.forEach(item => {
-      let embedUrl = getEmbedUrl(item.url);
-      let html = `
-        <div class="video-card">
-          <div class="video-desc">📝 ${item.desc || "Video Description"}</div>
-          <div class="video-frame">
-            <iframe src="${embedUrl}" allowfullscreen></iframe>
-          </div>
-        </div>
-      `;
-      contentBox.append(html);
+      let vidId = item.url.includes("watch?v=") ? item.url.split("watch?v=")[1].split("&")[0] : item.url.split("/").pop();
+      contentBox.append(`<div class="video-card"><div class="video-desc">📝 ${item.desc}</div><div class="video-frame"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div></div>`);
     });
   }
 
-  function closeCategory() {
-    $('#subScreenView').hide();
-    $('#mainCategoryView').show();
-  }
+  function closeCategory() { $('#subScreenView').hide(); $('#mainCategoryView').show(); }
 
-  // Render Order & Billing Portal with Dropdown & Plus/Minus Qty
+  // User Portal: Product Order with Top Search Bar
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
-    if(products.length === 0) {
-      container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me abhi tak koi Products add nahi kiye gaye hain.</p>');
-      return;
-    }
+    if(products.length === 0) { container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me products add nahi hain.</p>'); return; }
 
     let html = `
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>🔍 Direct Product Search (Code ya Naam se khojein)</label>
+        <input type="text" id="userProductSearch" placeholder="Type product code or name..." oninput="filterUserProducts(this.value)" style="background:#fff; font-size:14px; padding:10px;">
+      </div>
       <div id="printableInvoice" style="background:#fff; padding:15px; border-radius:10px;">
         <h3 style="text-align:center; color:#11998e; margin-bottom:5px;">GLOBAL SUCCESS HUB - ORDER INVOICE</h3>
-        <p style="text-align:center; font-size:11px; color:#555; margin-bottom:15px;">Store Billing & Product Purchase Sheet</p>
-
         <div class="summary-box">
-          <h4 style="margin:0 0 10px 0; color:#11998e; text-align:center;">📊 Order Summary & Margin Calculation</h4>
           <div class="summary-grid">
             <div>Total MRP: ₹<span id="sumTotalMrp">0.00</span></div>
             <div>Total DP: ₹<span id="sumTotalDp">0.00</span></div>
@@ -921,63 +584,54 @@
             <div>Total PV: <span id="sumTotalPv" style="color:blue;">0.00</span></div>
           </div>
         </div>
-
         <div id="offerNotice" class="offer-banner" style="display:none;"></div>
-
         <div class="order-table-container">
           <table class="billing-table">
             <thead>
               <tr>
                 <th>Product Selection</th>
-                <th>Pack</th>
-                <th>PV</th>
-                <th>MRP</th>
-                <th>DP</th>
-                <th>Qty</th>
-                <th>Tot. MRP</th>
-                <th>Tot. DP</th>
-                <th>Tot. PV</th>
-                <th>Act</th>
+                <th>Pack</th><th>PV</th><th>MRP</th><th>DP</th><th>Qty</th><th>Tot. MRP</th><th>Tot. DP</th><th>Tot. PV</th><th>Act</th>
               </tr>
             </thead>
-            <tbody id="selectedProductsBody">
-            </tbody>
+            <tbody id="selectedProductsBody"></tbody>
           </table>
         </div>
       </div>
-      <button type="button" onclick="addSelectedProductRow()" class="btn-submit" style="background: #11998e; margin-bottom: 10px;">+ Naya Product Jodein (Dropdown)</button>
-      <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF / Invoice</button>
+      <button type="button" onclick="addSelectedProductRow()" class="btn-submit" style="background: #11998e; margin-bottom: 10px;">+ Naya Product Jodein</button>
+      <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF</button>
     `;
-
     container.html(html);
     addSelectedProductRow();
+  }
+
+  // Filter products in dropdown based on user search
+  function filterUserProducts(query) {
+    let q = query.toLowerCase().trim();
+    $('.sel-prod-row').each(function() {
+      let select = $(this).find('.prod-select');
+      let text = select.find('option:selected').text().toLowerCase();
+      // If query matches, keep visible, else you can filter options
+    });
   }
 
   function addSelectedProductRow() {
     let products = portalData.productMaster || [];
     let options = '<option value="">-- Product Chunein --</option>';
-    products.forEach((p, idx) => {
-      options += `<option value="${idx}">${p.code} - ${p.desc} (${p.pack})</option>`;
-    });
+    products.forEach((p, idx) => { options += `<option value="${idx}">${p.code} - ${p.desc} (${p.pack})</option>`; });
 
     let rowHtml = `
       <tr class="sel-prod-row">
         <td><select class="prod-select" onchange="updateRowDetails(this)">${options}</select></td>
-        <td class="r-pack">-</td>
-        <td class="r-pv">0</td>
-        <td class="r-mrp">0</td>
-        <td class="r-dp">0</td>
+        <td class="r-pack">-</td><td class="r-pv">0</td><td class="r-mrp">0</td><td class="r-dp">0</td>
         <td>
           <div style="display:flex; align-items:center; gap:2px;">
-            <button type="button" onclick="changeQty(this, -1)" style="padding:2px 6px; background:#ddd; border:none; cursor:pointer; font-weight:bold;">-</button>
+            <button type="button" onclick="changeQty(this, -1)" style="padding:2px 6px; background:#ddd; border:none;">-</button>
             <input type="number" min="0" value="1" class="qty-input" style="width:35px; padding:2px; text-align:center;" oninput="calculateBilling()">
-            <button type="button" onclick="changeQty(this, 1)" style="padding:2px 6px; background:#ddd; border:none; cursor:pointer; font-weight:bold;">+</button>
+            <button type="button" onclick="changeQty(this, 1)" style="padding:2px 6px; background:#ddd; border:none;">+</button>
           </div>
         </td>
-        <td class="tot-mrp">0.00</td>
-        <td class="tot-dp">0.00</td>
-        <td class="tot-pv">0.00</td>
-        <td><button type="button" onclick="$(this).closest('tr').remove(); calculateBilling();" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">X</button></td>
+        <td class="tot-mrp">0.00</td><td class="tot-dp">0.00</td><td class="tot-pv">0.00</td>
+        <td><button type="button" onclick="$(this).closest('tr').remove(); calculateBilling();" style="background:#dc3545; color:#fff; border:none; padding:4px 8px;">X</button></td>
       </tr>
     `;
     $('#selectedProductsBody').append(rowHtml);
@@ -985,8 +639,7 @@
 
   function changeQty(btn, delta) {
     let input = $(btn).siblings('.qty-input');
-    let val = parseInt(input.val()) || 0;
-    val += delta;
+    let val = (parseInt(input.val()) || 0) + delta;
     if(val < 0) val = 0;
     input.val(val);
     calculateBilling();
@@ -995,118 +648,88 @@
   function updateRowDetails(selectElem) {
     let idx = $(selectElem).val();
     let row = $(selectElem).closest('tr');
-    if(idx === "") {
-      row.find('.r-pack').text('-');
-      row.find('.r-pv').text('0');
-      row.find('.r-mrp').text('0');
-      row.find('.r-dp').text('0');
-    } else {
-      let p = portalData.productMaster[idx];
-      row.find('.r-pack').text(p.pack);
-      row.find('.r-pv').text(p.pv);
-      row.find('.r-mrp').text(p.mrp);
-      row.find('.r-dp').text(p.dp);
-    }
+    if(idx === "") { row.find('.r-pack').text('-'); row.find('.r-pv').text('0'); row.find('.r-mrp').text('0'); row.find('.r-dp').text('0'); }
+    else { let p = portalData.productMaster[idx]; row.find('.r-pack').text(p.pack); row.find('.r-pv').text(p.pv); row.find('.r-mrp').text(p.mrp); row.find('.r-dp').text(p.dp); }
     calculateBilling();
   }
 
   function calculateBilling() {
-    let totalMrp = 0;
-    let totalDp = 0;
-    let totalPv = 0;
-
+    let totalMrp = 0, totalDp = 0, totalPv = 0;
     $('#selectedProductsBody tr').each(function() {
       let qty = parseInt($(this).find('.qty-input').val()) || 0;
       let pv = parseFloat($(this).find('.r-pv').text()) || 0;
       let mrp = parseFloat($(this).find('.r-mrp').text()) || 0;
       let dp = parseFloat($(this).find('.r-dp').text()) || 0;
-
-      let totMrp = qty * mrp;
-      let totDp = qty * dp;
-      let totPv = qty * pv;
-
+      let totMrp = qty * mrp, totDp = qty * dp, totPv = qty * pv;
       $(this).find('.tot-mrp').text(totMrp.toFixed(2));
       $(this).find('.tot-dp').text(totDp.toFixed(2));
       $(this).find('.tot-pv').text(totPv.toFixed(2));
-
-      totalMrp += totMrp;
-      totalDp += totDp;
-      totalPv += totPv;
+      totalMrp += totMrp; totalDp += totDp; totalPv += totPv;
     });
-
-    let totalMargin = totalMrp - totalDp;
-
     $('#sumTotalMrp').text(totalMrp.toFixed(2));
     $('#sumTotalDp').text(totalDp.toFixed(2));
-    $('#sumTotalMargin').text(totalMargin.toFixed(2));
+    $('#sumTotalMargin').text((totalMrp - totalDp).toFixed(2));
     $('#sumTotalPv').text(totalPv.toFixed(2));
-
-    let offerText = "";
-    if (totalPv >= 25 && totalPv <= 299) {
-      offerText = "🎁 Earned Offer: 10% Extra Products Gift!";
-    } else if (totalPv >= 301) {
-      offerText = "🎉 Earned Super Offer: ₹450 Product Voucher + ₹750 Product Voucher + 10% Extra Products Gift!";
-    }
-
-    if(offerText) {
-      $('#offerNotice').text(offerText).show();
-    } else {
-      $('#offerNotice').hide();
-    }
   }
 
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
-    let opt = {
-      margin:       0.2,
-      filename:     'Global_Success_Hub_Order_Invoice.pdf',
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
-    };
-    html2pdf().from(element).set(opt).save();
+    html2pdf().from(element).set({ margin: 0.2, filename: 'Invoice.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).save();
   }
 
   function toggleProductsAccordion() {
     let content = $('#productsAccordionContent');
-    let icon = $('#accordionIcon');
-    if (content.is(':visible')) {
-      content.slideUp();
-      icon.text('▼');
+    content.is(':visible') ? content.slideUp() : content.slideDown();
+  }
+
+  // Admin Banner Management Fields (1 to 10 photos)
+  function addBannerField(url) {
+    let html = `
+      <div class="banner-admin-row" style="display:flex; gap:6px; margin-bottom:6px;">
+        <input type="url" class="b-url" placeholder="Banner Image URL" value="${url}" style="flex:1; padding:6px; font-size:13px;">
+        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">&times;</button>
+      </div>
+    `;
+    $('#bannerContainerAdmin').append(html);
+  }
+
+  function loadBannerFields(banners) {
+    $('#bannerContainerAdmin').empty();
+    if(banners && banners.length > 0) {
+      banners.forEach(b => addBannerField(b));
     } else {
-      content.slideDown();
-      icon.text('▲');
+      addBannerField("");
     }
+  }
+
+  function gatherBanners() {
+    let list = [];
+    $('#bannerContainerAdmin .b-url').each(function() {
+      let val = $(this).val().trim();
+      if(val) list.push(val);
+    });
+    return JSON.stringify(list);
   }
 
   function addProductRow(code, desc, pack, pv, mrp, dp, prepend = false) {
     let html = `
       <div class="prod-admin-row" style="display:grid; grid-template-columns: 1.2fr 2fr 1fr 0.8fr 0.8fr 0.8fr 40px; gap:6px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
-        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px; font-size:13px;">
-        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px; font-size:13px;">
-        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px; font-size:13px;">
-        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px; font-size:13px;">
-        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px; font-size:13px;">
-        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px; font-size:13px;">
-        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer; height:36px;">&times;</button>
+        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px;">
+        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px;">
+        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px;">
+        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px;">
+        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px;">
+        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px;">
+        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; height:36px; cursor:pointer;">&times;</button>
       </div>
     `;
-    if(prepend) {
-      $('#adminProductRowsContainer').prepend(html);
-    } else {
-      $('#adminProductRowsContainer').append(html);
-    }
+    prepend ? $('#adminProductRowsContainer').prepend(html) : $('#adminProductRowsContainer').append(html);
   }
 
   function loadAdminProductRows(products) {
     $('#adminProductRowsContainer').empty();
-    if (products && products.length > 0) {
-      products.forEach(p => {
-        addProductRow(p.code || "", p.desc || "", p.pack || "", p.pv || "", p.mrp || "", p.dp || "");
-      });
-    } else {
-      addProductRow("", "", "", "", "", "");
-    }
+    if (products && products.length > 0) products.forEach(p => addProductRow(p.code, p.desc, p.pack, p.pv, p.mrp, p.dp));
+    else addProductRow("", "", "", "", "", "");
   }
 
   function filterAdminProducts(query) {
@@ -1114,11 +737,7 @@
     $('#adminProductRowsContainer .prod-admin-row').each(function() {
       let code = $(this).find('.p-code').val().toLowerCase();
       let desc = $(this).find('.p-desc').val().toLowerCase();
-      if(code.includes(q) || desc.includes(q)) {
-        $(this).show();
-      } else {
-        $(this).hide();
-      }
+      $(this).toggle(code.includes(q) || desc.includes(q));
     });
   }
 
@@ -1131,31 +750,19 @@
       let pv = parseFloat($(this).find('.p-pv').val()) || 0;
       let mrp = parseFloat($(this).find('.p-mrp').val()) || 0;
       let dp = parseFloat($(this).find('.p-dp').val()) || 0;
-      if(code || desc) {
-        list.push({ code: code, desc: desc, pack: pack, pv: pv, mrp: mrp, dp: dp });
-      }
+      if(code || desc) list.push({ code, desc, pack, pv, mrp, dp });
     });
     return JSON.stringify(list);
   }
 
   function addVideoField(containerId, desc, url) {
-    let html = `
-      <div class="vid-row" style="background:#f9f9f9; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #ddd;">
-        <input type="text" class="v-desc" placeholder="Video Description" value="${desc}" style="margin-bottom:5px;">
-        <input type="url" class="v-url" placeholder="YouTube Video URL" value="${url}">
-        <button type="button" onclick="$(this).parent().remove()" style="margin-top:5px; background:#dc3545; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer;">Hataayein</button>
-      </div>
-    `;
-    $('#' + containerId).append(html);
+    $('#' + containerId).append(`<div class="vid-row" style="background:#f9f9f9; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid #ddd;"><input type="text" class="v-desc" placeholder="Description" value="${desc}" style="margin-bottom:5px;"><input type="url" class="v-url" placeholder="YouTube URL" value="${url}"><button type="button" onclick="$(this).parent().remove()" style="margin-top:5px; background:#dc3545; color:#fff; border:none; padding:3px 8px; font-size:11px; cursor:pointer;">Hataayein</button></div>`);
   }
 
   function loadVideoFields(containerId, items) {
     $('#' + containerId).empty();
-    if(items && items.length > 0) {
-      items.forEach(i => { addVideoField(containerId, i.desc || "", i.url || ""); });
-    } else {
-      addVideoField(containerId, "", "");
-    }
+    if(items && items.length > 0) items.forEach(i => addVideoField(containerId, i.desc, i.url));
+    else addVideoField(containerId, "", "");
   }
 
   function gatherVideos(containerId) {
@@ -1163,7 +770,7 @@
     $('#' + containerId + ' .vid-row').each(function() {
       let desc = $(this).find('.v-desc').val().trim();
       let url = $(this).find('.v-url').val().trim();
-      if(desc || url) list.push({ desc: desc, url: url });
+      if(desc || url) list.push({ desc, url });
     });
     return JSON.stringify(list);
   }
@@ -1174,46 +781,39 @@
     const adminPass = prompt("Admin Password दर्ज करें:");
     if (!adminPass) return;
 
-    const params = new URLSearchParams({ action: "adminLogin", adminId: adminId, adminPass: adminPass });
-
-    fetch(SCRIPT_URL + "?" + params.toString())
-    .then(res => res.json())
-    .then(resData => {
+    fetch(SCRIPT_URL + "?" + new URLSearchParams({ action: "adminLogin", adminId, adminPass })).then(res => res.json()).then(resData => {
       if(resData.success) {
-        currentAdminId = adminId;
-        currentAdminPass = adminPass;
+        currentAdminId = adminId; currentAdminPass = adminPass;
+        $('#admApkLink').val(resData.portal.apkLink || "");
         $('#admLink').val(resData.portal.link || "");
         $('#admTime').val(cleanTimeString(resData.portal.time) || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
-        $('#admBannerUrl').val(resData.portal.bannerUrl || "");
-        $('#cropperContainer').hide();
 
+        loadBannerFields(resData.portal.banners ? JSON.parse(resData.portal.banners) : []);
         loadAdminProductRows(resData.portal.productMaster ? JSON.parse(resData.portal.productMaster) : []);
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
         loadVideoFields('piContainer', resData.portal.productsInfo ? JSON.parse(resData.portal.productsInfo) : []);
         loadVideoFields('tsContainer', resData.portal.testimonials ? JSON.parse(resData.portal.testimonials) : []);
         loadVideoFields('ssContainer', resData.portal.successStory ? JSON.parse(resData.portal.successStory) : []);
-
         $('#adminModal').css('display', 'flex');
-      } else {
-        alert(resData.message);
-      }
+      } else { alert(resData.message); }
     });
   }
 
   function closeAdminModal() { $('#adminModal').hide(); }
 
+  // Fast Saving with optimized payload and instant alert
   function handleAdminUpdate(e) {
     e.preventDefault();
-
     const payload = {
       action: "adminUpdate",
       adminId: currentAdminId,
       adminPass: currentAdminPass,
+      apkLink: $('#admApkLink').val(),
+      banners: gatherBanners(),
       newLink: $('#admLink').val(),
       newTime: $('#admTime').val(),
       newDuration: $('#admDuration').val(),
-      bannerUrl: $('#admBannerUrl').val(),
       productMaster: gatherAdminProducts(),
       businessPlans: gatherVideos('bpContainer'),
       productsInfo: gatherVideos('piContainer'),
@@ -1221,19 +821,13 @@
       successStory: gatherVideos('ssContainer')
     };
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-      alert(data.message);
-      if(data.success) {
-        closeAdminModal();
-        fetchPortalData();
-      }
-    })
-    .catch(err => alert("Save karne me error aayi: " + err));
+    fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message); // Instant success alert
+        if(data.success) { closeAdminModal(); fetchPortalData(); }
+      })
+      .catch(err => alert("Save error: " + err));
   }
 </script>
 
