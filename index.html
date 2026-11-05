@@ -487,6 +487,10 @@
           <h3>🛒 Product Order & Billing</h3>
           <p>Select products, calculate PV & Margin</p>
         </div>
+        <div class="category-card" onclick="shareApp()" style="background: linear-gradient(135deg, #2b5876, #4e4376);">
+          <h3>📤 Share App</h3>
+          <p>Apni team aur dosto ko share karein</p>
+        </div>
       </div>
 
       <button onclick="handleLogout()" class="logout-btn">लॉग आउट (Logout)</button>
@@ -822,6 +826,22 @@
   function joinMeeting() {
     if(portalData.link) window.open(portalData.link, '_blank');
     else alert("मीटिंग लिंक उपलब्ध नहीं है। कृपया एडमिन से संपर्क करें।");
+  }
+
+  function shareApp() {
+    const appLink = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Global Success Hub',
+        text: 'Global Success Hub ke official MLM app ko download karne ke liye yahan click karein:',
+        url: appLink,
+      })
+      .then(() => console.log('Successfully shared'))
+      .catch((error) => console.log('Error sharing:', error));
+    } else {
+      navigator.clipboard.writeText(appLink);
+      alert("App link copied to clipboard! Aap ise kahin bhi paste karke share kar sakte hain.");
+    }
   }
 
   function openCategory(type) {
