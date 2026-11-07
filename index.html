@@ -71,41 +71,36 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Bada Slider Banner Style (Badi Size & Clear View) */
+    /* Bada Auto-Scrolling Banner Slider (Complete Image View with Contain) */
     .banner-slider-container {
-  width: 100%;
-  height: auto; /* Fixed height ki jagah auto karein taaki image ke mutabiq adjust ho */
-  max-height: 320px;
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-  background: #000;
-  position: relative;
-  display: none;
-}
-.banner-slide {
-  width: 100%;
-  height: 100%;
-  display: none;
-  position: relative; /* absolute ki jagah relative karein */
-  text-align: center;
-}
-.banner-slide.active {
-  display: block;
-}
-.banner-slide img {
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: contain; /* Isse image cut nahi hogi, puri dikhegi */
-  display: block;
-  margin: 0 auto;
-}
-    
-    @keyframes fadeSlide {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+      width: 100%;
+      height: auto;
+      max-height: 320px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      background: #000;
+      position: relative;
+      display: none;
+    }
+    .banner-slide {
+      width: 100%;
+      height: 100%;
+      display: none;
+      position: relative;
+      text-align: center;
+    }
+    .banner-slide.active {
+      display: block;
+    }
+    .banner-slide img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
 
     .brand-title {
@@ -316,7 +311,6 @@
       <div class="admin-section-title">1. APK Download Link Update</div>
       <div class="form-group"><label>APK File Download URL</label><input type="url" id="admApkLink" placeholder="https://..."></div>
 
-      <!-- Multiple Banners Management (1 to 10 Photos) -->
       <div class="admin-section-title">2. Multiple Banner Images (1 to 10 Photos - Auto Scroll 5s)</div>
       <div id="bannerContainerAdmin"></div>
       <button type="button" onclick="addBannerField('')" style="margin-top:5px; padding:5px 10px; background:#667eea; color:#fff; border:none; border-radius:4px; cursor:pointer;">+ Aur Banner URL Jodein</button>
@@ -445,7 +439,6 @@
     }
   }
 
-  // Render Multiple Banners with 5-Second Auto-Scroll Interval
   function renderBannerSlider() {
     let container = $('#bannerSliderContainer');
     container.empty();
@@ -465,7 +458,7 @@
           slides.eq(currentIndex).removeClass('active');
           currentIndex = (currentIndex + 1) % slides.length;
           slides.eq(currentIndex).addClass('active');
-        }, 5000); // 5 Seconds interval
+        }, 5000);
       }
     } else {
       container.hide();
@@ -521,12 +514,11 @@
 
   function checkPersistentLogin() { if(localStorage.getItem("gsh_user")) showDashboard(); }
   function showDashboard() { $('#authSection').hide(); $('#dashboardSection').show(); }
-  function handleLogout() { localStorage.removeItem("gsh_user"); $('#dashboardSection').show(); $('#authSection').show(); }
+  function handleLogout() { localStorage.removeItem("gsh_user"); $('#dashboardSection').hide(); $('#authSection').show(); }
 
-  // Direct Meeting Join (No link prompt view, opens directly)
   function joinMeeting() {
     if(portalData.link) {
-      window.location.href = portalData.link; // Direct join without intermediate screen
+      window.location.href = portalData.link;
     } else {
       alert("मीटिंग लिंक उपलब्ध नहीं है।");
     }
@@ -568,7 +560,6 @@
 
   function closeCategory() { $('#subScreenView').hide(); $('#mainCategoryView').show(); }
 
-  // User Portal: Product Order with Top Search Bar
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
     if(products.length === 0) { container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me products add nahi hain.</p>'); return; }
@@ -608,13 +599,28 @@
     addSelectedProductRow();
   }
 
-  // Filter products in dropdown based on user search
+  // Updated Working Filter Logic for User Search Box
   function filterUserProducts(query) {
     let q = query.toLowerCase().trim();
     $('.sel-prod-row').each(function() {
       let select = $(this).find('.prod-select');
-      let text = select.find('option:selected').text().toLowerCase();
-      // If query matches, keep visible, else you can filter options
+      let foundIndex = "";
+      
+      portalData.productMaster.forEach((p, idx) => {
+        let code = (p.code || "").toLowerCase();
+        let desc = (p.desc || "").toLowerCase();
+        if(q && (code.includes(q) || desc.includes(q))) {
+          foundIndex = idx;
+        }
+      });
+
+      if(q === "") {
+        select.val("");
+        updateRowDetails(select[0]);
+      } else if(foundIndex !== "") {
+        select.val(foundIndex);
+        updateRowDetails(select[0]);
+      }
     });
   }
 
@@ -686,7 +692,6 @@
     content.is(':visible') ? content.slideUp() : content.slideDown();
   }
 
-  // Admin Banner Management Fields (1 to 10 photos)
   function addBannerField(url) {
     let html = `
       <div class="banner-admin-row" style="display:flex; gap:6px; margin-bottom:6px;">
@@ -806,7 +811,6 @@
 
   function closeAdminModal() { $('#adminModal').hide(); }
 
-  // Fast Saving with optimized payload and instant alert
   function handleAdminUpdate(e) {
     e.preventDefault();
     const payload = {
@@ -828,7 +832,7 @@
     fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(res => res.json())
       .then(data => {
-        alert(data.message); // Instant success alert
+        alert(data.message);
         if(data.success) { closeAdminModal(); fetchPortalData(); }
       })
       .catch(err => alert("Save error: " + err));
