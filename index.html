@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Global Success Hub - Dashboard Portal</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Cropper.js for Banner -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <!-- html2pdf.js for Invoice/Order PDF Download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
@@ -71,7 +68,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Bada Auto-Scrolling Banner Slider (Complete Image View with Contain) */
+    /* Banner Slider (1200x675 HD Aspect Ratio & Contain to prevent cutting) */
     .banner-slider-container {
       width: 100%;
       height: auto;
@@ -220,10 +217,8 @@
     <a id="topApkLinkBtn" href="#" class="apk-download-btn" download>Download APK</a>
   </div>
 
-  <!-- Bada Auto-Scrolling Banner Slider (1 to 10 photos) -->
-  <div id="bannerSliderContainer" class="banner-slider-container">
-    <!-- Slides will be injected dynamically -->
-  </div>
+  <!-- Banner Slider Container -->
+  <div id="bannerSliderContainer" class="banner-slider-container"></div>
 
   <div class="brand-title">Global Success Hub</div>
   <div class="brand-subtitle">Online / Offline Work & Meeting Portal</div>
@@ -244,14 +239,8 @@
     </div>
 
     <form id="signinForm" onsubmit="handleSignIn(event)">
-      <div class="form-group">
-        <label>मोबाइल नंबर</label>
-        <input type="tel" id="loginMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर">
-      </div>
-      <div class="form-group">
-        <label>पासवर्ड</label>
-        <input type="password" id="loginPassword" required placeholder="अपना पासवर्ड दर्ज करें">
-      </div>
+      <div class="form-group"><label>मोबाइल नंबर</label><input type="tel" id="loginMobile" pattern="[0-9]{10}" required placeholder="10 अंकों का मोबाइल नंबर"></div>
+      <div class="form-group"><label>पासवर्ड</label><input type="password" id="loginPassword" required placeholder="अपना पासवर्ड दर्ज करें"></div>
       <button type="submit" class="btn-submit">लॉगिन करें</button>
     </form>
 
@@ -351,16 +340,8 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykZvD6nP6QorHUew8wsmaQ7b8ycq0woVVnMTaZC8fE4hNNUF1taeLEBrCmU9UnsHDD/exec";
   let portalData = {
-    link: "",
-    apkLink: "",
-    time: "20:30",
-    duration: "45",
-    banners: [],
-    businessPlans: [],
-    productsInfo: [],
-    testimonials: [],
-    successStory: [],
-    productMaster: []
+    link: "", apkLink: "", time: "20:30", duration: "45",
+    banners: [], businessPlans: [], productsInfo: [], testimonials: [], successStory: [], productMaster: []
   };
   let currentAdminId = "";
   let currentAdminPass = "";
@@ -372,35 +353,21 @@
     setInterval(fetchPortalData, 30000);
   });
 
-  function speakText(text) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'hi-IN';
-      utterance.rate = 1.0;
-      window.speechSynthesis.speak(utterance);
-    }
-  }
-
   function switchTab(type) {
     $('.tab-btn').removeClass('active');
     if(type === 'signin') {
       $('.tab-btn:nth-child(1)').addClass('active');
-      $('#signinForm').show();
-      $('#signupForm').hide();
+      $('#signinForm').show(); $('#signupForm').hide();
     } else {
       $('.tab-btn:nth-child(2)').addClass('active');
-      $('#signinForm').hide();
-      $('#signupForm').show();
+      $('#signinForm').hide(); $('#signupForm').show();
     }
   }
 
   function cleanTimeString(timeStr) {
     if (!timeStr) return "20:30";
-    let str = timeStr.toString();
-    let match = str.match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
-    if (match) return match[0];
-    return "20:30";
+    let match = timeStr.toString().match(/([0-1]?[0-9]|2[0-3]):([0-5][0-9])/);
+    return match ? match[0] : "20:30";
   }
 
   function fetchPortalData() {
@@ -418,7 +385,6 @@
           try { portalData.productsInfo = JSON.parse(data.portal.productsInfo || "[]"); } catch(e) { portalData.productsInfo = []; }
           try { portalData.testimonials = JSON.parse(data.portal.testimonials || "[]"); } catch(e) { portalData.testimonials = []; }
           try { portalData.successStory = JSON.parse(data.portal.successStory || "[]"); } catch(e) { portalData.successStory = []; }
-          
           try { 
             portalData.productMaster = JSON.parse(data.portal.productMaster || "[]");
             portalData.productMaster.sort((a, b) => (a.desc || "").localeCompare(b.desc || ""));
@@ -428,8 +394,7 @@
           updateTopApkBanner();
           renderBannerSlider();
         }
-      })
-      .catch(err => console.log("Fetch error:", err));
+      });
   }
 
   function updateTopApkBanner() {
@@ -446,14 +411,12 @@
 
     if (portalData.banners && portalData.banners.length > 0) {
       portalData.banners.forEach((url, idx) => {
-        let activeClass = idx === 0 ? 'active' : '';
-        container.append(`<div class="banner-slide ${activeClass}"><img src="${url}" alt="Banner"></div>`);
+        container.append(`<div class="banner-slide ${idx === 0 ? 'active' : ''}"><img src="${url}" alt="Banner"></div>`);
       });
       container.show();
-
-      let currentIndex = 0;
       let slides = container.find('.banner-slide');
       if (slides.length > 1) {
+        let currentIndex = 0;
         bannerInterval = setInterval(() => {
           slides.eq(currentIndex).removeClass('active');
           currentIndex = (currentIndex + 1) % slides.length;
@@ -467,10 +430,8 @@
 
   function format12Hour(timeStr) {
     if (!timeStr) return "--:--";
-    let clean = cleanTimeString(timeStr);
-    let parts = clean.split(':');
-    let h = parseInt(parts[0], 10);
-    let m = parseInt(parts[1], 10);
+    let parts = cleanTimeString(timeStr).split(':');
+    let h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
     let ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12; h = h ? h : 12;
     return h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
@@ -494,19 +455,16 @@
 
   function handleSignUp(e) {
     e.preventDefault();
-    const refVal = $('#regReferral').val().trim() || "Direct / Self";
-    const params = new URLSearchParams({ action: "signup", name: $('#regName').val(), mobile: $('#regMobile').val(), address: $('#regAddress').val(), referral: refVal, password: $('#regPassword').val() });
-
+    const params = new URLSearchParams({ action: "signup", name: $('#regName').val(), mobile: $('#regMobile').val(), address: $('#regAddress').val(), referral: $('#regReferral').val() || "Direct / Self", password: $('#regPassword').val() });
     fetch(SCRIPT_URL + "?" + params.toString()).then(res => res.json()).then(data => {
-      if(data.success) { alert(data.message); switchTab('signin'); $('#loginMobile').val($('#regMobile').val()); $('#signupForm')[0].reset(); }
-      else { alert(data.message); }
+      alert(data.message);
+      if(data.success) { switchTab('signin'); $('#loginMobile').val($('#regMobile').val()); $('#signupForm')[0].reset(); }
     });
   }
 
   function handleSignIn(e) {
     e.preventDefault();
-    const params = new URLSearchParams({ action: "signin", mobile: $('#loginMobile').val(), password: $('#loginPassword').val() });
-    fetch(SCRIPT_URL + "?" + params.toString()).then(res => res.json()).then(data => {
+    fetch(SCRIPT_URL + "?" + new URLSearchParams({ action: "signin", mobile: $('#loginMobile').val(), password: $('#loginPassword').val() })).then(res => res.json()).then(data => {
       if(data.success) { localStorage.setItem("gsh_user", JSON.stringify(data.user)); showDashboard(); }
       else { alert(data.message); }
     });
@@ -517,33 +475,24 @@
   function handleLogout() { localStorage.removeItem("gsh_user"); $('#dashboardSection').hide(); $('#authSection').show(); }
 
   function joinMeeting() {
-    if(portalData.link) {
-      window.location.href = portalData.link;
-    } else {
-      alert("मीटिंग लिंक उपलब्ध नहीं है।");
-    }
+    if(portalData.link) window.location.href = portalData.link;
+    else alert("मीटिंग लिंक उपलब्ध नहीं है।");
   }
 
   function shareApp() {
-    const appLink = portalData.apkLink || window.location.href;
-    if (navigator.share) {
-      navigator.share({ title: 'Global Success Hub APK', text: 'Download app:', url: appLink });
-    } else {
-      navigator.clipboard.writeText(appLink);
-      alert("App download link copy ho gaya hai!");
-    }
+    let appLink = portalData.apkLink || window.location.href;
+    if (navigator.share) { navigator.share({ title: 'Global Success Hub', text: 'Download app:', url: appLink }); }
+    else { navigator.clipboard.writeText(appLink); alert("App link copied!"); }
   }
 
   function openCategory(type) {
     $('#mainCategoryView').hide();
     $('#subScreenView').show();
-    let title = "";
-    const contentBox = $('#subScreenContent');
+    let contentBox = $('#subScreenContent');
     contentBox.empty();
 
     if(type === 'productOrder') {
-      title = "🛒 Product Order & Billing Portal";
-      $('#subScreenTitle').text(title);
+      $('#subScreenTitle').text("🛒 Product Order & Billing Portal");
       renderOrderPortal(contentBox);
       return;
     }
@@ -551,7 +500,7 @@
     let items = type === 'businessPlans' ? portalData.businessPlans : type === 'productsInfo' ? portalData.productsInfo : type === 'testimonials' ? portalData.testimonials : portalData.successStory;
     $('#subScreenTitle').text(type === 'businessPlans' ? "📈 Business Plan" : type === 'productsInfo' ? "🛍️ Products Info" : type === 'testimonials' ? "⭐ Testimonials" : "🏆 Success Story");
     
-    if(items.length === 0) { contentBox.html('<p style="text-align:center; color:#666;">Yahan koi video uplabdh nahi hai.</p>'); return; }
+    if(items.length === 0) { contentBox.html('<p style="text-align:center; color:#666;">No videos available.</p>'); return; }
     items.forEach(item => {
       let vidId = item.url.includes("watch?v=") ? item.url.split("watch?v=")[1].split("&")[0] : item.url.split("/").pop();
       contentBox.append(`<div class="video-card"><div class="video-desc">📝 ${item.desc}</div><div class="video-frame"><iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe></div></div>`);
@@ -562,15 +511,16 @@
 
   function renderOrderPortal(container) {
     let products = portalData.productMaster || [];
-    if(products.length === 0) { container.html('<p style="text-align:center; color:#666; padding:20px;">Admin panel me products add nahi hain.</p>'); return; }
+    if(products.length === 0) { container.html('<p style="text-align:center; color:#666; padding:20px;">No products added in admin panel.</p>'); return; }
 
     let html = `
       <div class="form-group" style="margin-bottom: 15px;">
-        <label>🔍 Direct Product Search (Code ya Naam se khojein)</label>
-        <input type="text" id="userProductSearch" placeholder="Type product code or name..." oninput="filterUserProducts(this.value)" style="background:#fff; font-size:14px; padding:10px;">
+        <label>🔍 Direct Product Search (Code ya Naam se turant add karein)</label>
+        <input type="text" id="userProductSearch" placeholder="Type product code or name and press Enter..." onkeypress="handleProductSearchInput(event)" style="background:#fff; font-size:14px; padding:10px;">
       </div>
       <div id="printableInvoice" style="background:#fff; padding:15px; border-radius:10px;">
         <h3 style="text-align:center; color:#11998e; margin-bottom:5px;">GLOBAL SUCCESS HUB - ORDER INVOICE</h3>
+        <p style="text-align:center; font-size:11px; color:#555; margin-bottom:15px;">Store Billing & Product Purchase Sheet</p>
         <div class="summary-box">
           <div class="summary-grid">
             <div>Total MRP: ₹<span id="sumTotalMrp">0.00</span></div>
@@ -584,8 +534,7 @@
           <table class="billing-table">
             <thead>
               <tr>
-                <th>Product Selection</th>
-                <th>Pack</th><th>PV</th><th>MRP</th><th>DP</th><th>Qty</th><th>Tot. MRP</th><th>Tot. DP</th><th>Tot. PV</th><th>Act</th>
+                <th>Product Selection</th><th>Pack</th><th>PV</th><th>MRP</th><th>DP</th><th>Qty</th><th>Tot. MRP</th><th>Tot. DP</th><th>Tot. PV</th><th>Act</th>
               </tr>
             </thead>
             <tbody id="selectedProductsBody"></tbody>
@@ -593,45 +542,46 @@
         </div>
       </div>
       <button type="button" onclick="addSelectedProductRow()" class="btn-submit" style="background: #11998e; margin-bottom: 10px;">+ Naya Product Jodein</button>
-      <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF</button>
+      <button onclick="downloadOrderPDF()" class="btn-submit" style="background: linear-gradient(45deg, #2b5876, #4e4376);">📥 Download Order PDF / Invoice</button>
     `;
     container.html(html);
     addSelectedProductRow();
   }
 
-  // Updated Working Filter Logic for User Search Box
-  function filterUserProducts(query) {
-    let q = query.toLowerCase().trim();
-    $('.sel-prod-row').each(function() {
-      let select = $(this).find('.prod-select');
-      let foundIndex = "";
-      
+  // Handle direct search and instant add to invoice with search clear
+  function handleProductSearchInput(e) {
+    if (e.key === 'Enter') {
+      let q = $(e.target).val().toLowerCase().trim();
+      if (!q) return;
+
+      let matchedIndex = "";
       portalData.productMaster.forEach((p, idx) => {
         let code = (p.code || "").toLowerCase();
         let desc = (p.desc || "").toLowerCase();
-        if(q && (code.includes(q) || desc.includes(q))) {
-          foundIndex = idx;
+        if (code === q || desc.includes(q)) {
+          matchedIndex = idx;
         }
       });
 
-      if(q === "") {
-        select.val("");
-        updateRowDetails(select[0]);
-      } else if(foundIndex !== "") {
-        select.val(foundIndex);
-        updateRowDetails(select[0]);
+      if (matchedIndex !== "") {
+        addSelectedProductRow(matchedIndex);
+        $(e.target.value = ""); // Clear search bar instantly
+      } else {
+        alert("Product nahi mila! Sahi code ya naam dalein.");
       }
-    });
+    }
   }
 
-  function addSelectedProductRow() {
+  function addSelectedProductRow(preselectIdx = "") {
     let products = portalData.productMaster || [];
     let options = '<option value="">-- Product Chunein --</option>';
-    products.forEach((p, idx) => { options += `<option value="${idx}">${p.code} - ${p.desc} (${p.pack})</option>`; });
+    products.forEach((p, idx) => { 
+      options += `<option value="${idx}">${p.code} - ${p.desc} (${p.pack})</option>`; 
+    });
 
     let rowHtml = `
       <tr class="sel-prod-row">
-        <td><select class="prod-select" onchange="updateRowDetails(this)">${options}</select></td>
+        <td><select class="prod-select" style="width:180px;" onchange="updateRowDetails(this)">${options}</select></td>
         <td class="r-pack">-</td><td class="r-pv">0</td><td class="r-mrp">0</td><td class="r-dp">0</td>
         <td>
           <div style="display:flex; align-items:center; gap:2px;">
@@ -644,7 +594,13 @@
         <td><button type="button" onclick="$(this).closest('tr').remove(); calculateBilling();" style="background:#dc3545; color:#fff; border:none; padding:4px 8px;">X</button></td>
       </tr>
     `;
-    $('#selectedProductsBody').append(rowHtml);
+    let newRow = $(rowHtml);
+    $('#selectedProductsBody').append(newRow);
+
+    if (preselectIdx !== "") {
+      newRow.find('.prod-select').val(preselectIdx);
+      updateRowDetails(newRow.find('.prod-select')[0]);
+    }
   }
 
   function changeQty(btn, delta) {
@@ -674,17 +630,33 @@
       $(this).find('.tot-mrp').text(totMrp.toFixed(2));
       $(this).find('.tot-dp').text(totDp.toFixed(2));
       $(this).find('.tot-pv').text(totPv.toFixed(2));
-      totalMrp += totMrp; totalDp += totDp; totalPv += totPv;
+      totalMrp += totMrp; totalDp += totDp; totalPv += totalPv;
     });
+
     $('#sumTotalMrp').text(totalMrp.toFixed(2));
     $('#sumTotalDp').text(totalDp.toFixed(2));
     $('#sumTotalMargin').text((totalMrp - totalDp).toFixed(2));
     $('#sumTotalPv').text(totalPv.toFixed(2));
+
+    let offerText = "";
+    if (totalPv >= 25 && totalPv <= 299) {
+      offerText = "🎁 Earned Offer: 10% Extra Products Gift!";
+    } else if (totalPv >= 301) {
+      offerText = "🎉 Earned Super Offer: ₹450 Product Voucher + ₹750 Product Voucher + 10% Extra Products Gift!";
+    }
+    if(offerText) $('#offerNotice').text(offerText).show();
+    else $('#offerNotice').hide();
   }
 
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
-    html2pdf().from(element).set({ margin: 0.2, filename: 'Invoice.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).save();
+    html2pdf().from(element).set({ 
+      margin: 0.2, 
+      filename: 'Global_Success_Hub_Invoice.pdf', 
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true }, 
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } 
+    }).save();
   }
 
   function toggleProductsAccordion() {
@@ -693,45 +665,23 @@
   }
 
   function addBannerField(url) {
-    let html = `
-      <div class="banner-admin-row" style="display:flex; gap:6px; margin-bottom:6px;">
-        <input type="url" class="b-url" placeholder="Banner Image URL" value="${url}" style="flex:1; padding:6px; font-size:13px;">
-        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">&times;</button>
-      </div>
-    `;
-    $('#bannerContainerAdmin').append(html);
+    $('#bannerContainerAdmin').append(`<div class="banner-admin-row" style="display:flex; gap:6px; margin-bottom:6px;"><input type="url" class="b-url" placeholder="Banner Image URL" value="${url}" style="flex:1; padding:6px; font-size:13px;"><button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">&times;</button></div>`);
   }
 
   function loadBannerFields(banners) {
     $('#bannerContainerAdmin').empty();
-    if(banners && banners.length > 0) {
-      banners.forEach(b => addBannerField(b));
-    } else {
-      addBannerField("");
-    }
+    if(banners && banners.length > 0) banners.forEach(b => addBannerField(b));
+    else addBannerField("");
   }
 
   function gatherBanners() {
     let list = [];
-    $('#bannerContainerAdmin .b-url').each(function() {
-      let val = $(this).val().trim();
-      if(val) list.push(val);
-    });
+    $('#bannerContainerAdmin .b-url').each(function() { let val = $(this).val().trim(); if(val) list.push(val); });
     return JSON.stringify(list);
   }
 
   function addProductRow(code, desc, pack, pv, mrp, dp, prepend = false) {
-    let html = `
-      <div class="prod-admin-row" style="display:grid; grid-template-columns: 1.2fr 2fr 1fr 0.8fr 0.8fr 0.8fr 40px; gap:6px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;">
-        <input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px;">
-        <input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px;">
-        <input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px;">
-        <input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px;">
-        <input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px;">
-        <input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px;">
-        <button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; height:36px; cursor:pointer;">&times;</button>
-      </div>
-    `;
+    let html = `<div class="prod-admin-row" style="display:grid; grid-template-columns: 1.2fr 2fr 1fr 0.8fr 0.8fr 0.8fr 40px; gap:6px; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px; border:1px solid #ddd; align-items:center;"><input type="text" class="p-code" placeholder="Code" value="${code}" style="padding:6px;"><input type="text" class="p-desc" placeholder="Description" value="${desc}" style="padding:6px;"><input type="text" class="p-pack" placeholder="Pack" value="${pack}" style="padding:6px;"><input type="number" step="any" class="p-pv" placeholder="PV" value="${pv}" style="padding:6px;"><input type="number" step="any" class="p-mrp" placeholder="MRP" value="${mrp}" style="padding:6px;"><input type="number" step="any" class="p-dp" placeholder="DP" value="${dp}" style="padding:6px;"><button type="button" onclick="$(this).parent().remove()" style="background:#dc3545; color:#fff; border:none; height:36px; cursor:pointer;">&times;</button></div>`;
     prepend ? $('#adminProductRowsContainer').prepend(html) : $('#adminProductRowsContainer').append(html);
   }
 
@@ -797,7 +747,6 @@
         $('#admLink').val(resData.portal.link || "");
         $('#admTime').val(cleanTimeString(resData.portal.time) || "20:30");
         $('#admDuration').val(resData.portal.duration || "45");
-
         loadBannerFields(resData.portal.banners ? JSON.parse(resData.portal.banners) : []);
         loadAdminProductRows(resData.portal.productMaster ? JSON.parse(resData.portal.productMaster) : []);
         loadVideoFields('bpContainer', resData.portal.businessPlans ? JSON.parse(resData.portal.businessPlans) : []);
