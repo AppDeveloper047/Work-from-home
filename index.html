@@ -43,7 +43,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Top APK Download Banner */
     .top-apk-banner {
       background: linear-gradient(135deg, #11998e, #38ef7d);
       color: white;
@@ -68,7 +67,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    /* Banner Slider (1200x675 HD Aspect Ratio & Contain to prevent cutting) */
     .banner-slider-container {
       width: 100%;
       height: auto;
@@ -211,13 +209,11 @@
 
 <div class="container">
   
-  <!-- Top App Download Banner -->
   <div class="top-apk-banner">
     <span>📱 Global Success Hub Official App</span>
     <a id="topApkLinkBtn" href="#" class="apk-download-btn" download>Download APK</a>
   </div>
 
-  <!-- Banner Slider Container -->
   <div id="bannerSliderContainer" class="banner-slider-container"></div>
 
   <div class="brand-title">Global Success Hub</div>
@@ -548,10 +544,10 @@
     addSelectedProductRow();
   }
 
-  // Handle direct search and instant add to invoice with search clear
   function handleProductSearchInput(e) {
     if (e.key === 'Enter') {
-      let q = $(e.target).val().toLowerCase().trim();
+      let inputField = $(e.target);
+      let q = inputField.val().toLowerCase().trim();
       if (!q) return;
 
       let matchedIndex = "";
@@ -565,7 +561,7 @@
 
       if (matchedIndex !== "") {
         addSelectedProductRow(matchedIndex);
-        $(e.target.value = ""); // Clear search bar instantly
+        inputField.val(""); // Clear search bar instantly
       } else {
         alert("Product nahi mila! Sahi code ya naam dalein.");
       }
@@ -581,7 +577,7 @@
 
     let rowHtml = `
       <tr class="sel-prod-row">
-        <td><select class="prod-select" style="width:180px;" onchange="updateRowDetails(this)">${options}</select></td>
+        <td><select class="prod-select" style="width:200px;" onchange="updateRowDetails(this)">${options}</select></td>
         <td class="r-pack">-</td><td class="r-pv">0</td><td class="r-mrp">0</td><td class="r-dp">0</td>
         <td>
           <div style="display:flex; align-items:center; gap:2px;">
@@ -627,16 +623,20 @@
       let mrp = parseFloat($(this).find('.r-mrp').text()) || 0;
       let dp = parseFloat($(this).find('.r-dp').text()) || 0;
       let totMrp = qty * mrp, totDp = qty * dp, totPv = qty * pv;
+      
       $(this).find('.tot-mrp').text(totMrp.toFixed(2));
       $(this).find('.tot-dp').text(totDp.toFixed(2));
       $(this).find('.tot-pv').text(totPv.toFixed(2));
-      totalMrp += totMrp; totalDp += totDp; totalPv += totalPv;
+
+      totalMrp += totMrp; 
+      totalDp += totDp; 
+      totalPv += totPv; // FIXED: Added Total PV accumulation
     });
 
     $('#sumTotalMrp').text(totalMrp.toFixed(2));
     $('#sumTotalDp').text(totalDp.toFixed(2));
     $('#sumTotalMargin').text((totalMrp - totalDp).toFixed(2));
-    $('#sumTotalPv').text(totalPv.toFixed(2));
+    $('#sumTotalPv').text(totalPv.toFixed(2)); // FIXED: Updated Summary PV display
 
     let offerText = "";
     if (totalPv >= 25 && totalPv <= 299) {
@@ -651,10 +651,10 @@
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
     html2pdf().from(element).set({ 
-      margin: 0.2, 
+      margin: 0.3, 
       filename: 'Global_Success_Hub_Invoice.pdf', 
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true }, 
+      html2canvas: { scale: 2, useCORS: true, logging: true }, 
       jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } 
     }).save();
   }
