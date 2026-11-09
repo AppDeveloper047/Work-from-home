@@ -67,6 +67,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
+    /* Banner Slider with Hover/Touch Pause Support */
     .banner-slider-container {
       width: 100%;
       height: auto;
@@ -78,6 +79,7 @@
       background: #000;
       position: relative;
       display: none;
+      cursor: pointer;
     }
     .banner-slide {
       width: 100%;
@@ -342,6 +344,7 @@
   let currentAdminId = "";
   let currentAdminPass = "";
   let bannerInterval = null;
+  let isBannerPaused = false;
 
   $(document).ready(function() {
     fetchPortalData();
@@ -400,6 +403,7 @@
     }
   }
 
+  // Banner Slider with Pause on Hover / Touch
   function renderBannerSlider() {
     let container = $('#bannerSliderContainer');
     container.empty();
@@ -411,13 +415,23 @@
       });
       container.show();
       let slides = container.find('.banner-slide');
+      
       if (slides.length > 1) {
         let currentIndex = 0;
         bannerInterval = setInterval(() => {
-          slides.eq(currentIndex).removeClass('active');
-          currentIndex = (currentIndex + 1) % slides.length;
-          slides.eq(currentIndex).addClass('active');
+          if (!isBannerPaused) {
+            slides.eq(currentIndex).removeClass('active');
+            currentIndex = (currentIndex + 1) % slides.length;
+            slides.eq(currentIndex).addClass('active');
+          }
         }, 5000);
+
+        // Pause on hover / touch
+        container.off('mouseenter mouseleave touchstart touchend').on('mouseenter touchstart', function() {
+          isBannerPaused = true;
+        }).on('mouseleave touchend', function() {
+          isBannerPaused = false;
+        });
       }
     } else {
       container.hide();
@@ -514,7 +528,7 @@
         <label>🔍 Direct Product Search (Code ya Naam se turant add karein)</label>
         <input type="text" id="userProductSearch" placeholder="Type product code or name and press Enter..." onkeypress="handleProductSearchInput(event)" style="background:#fff; font-size:14px; padding:10px;">
       </div>
-      <div id="printableInvoice" style="background:#fff; padding:15px; border-radius:10px;">
+      <div id="printableInvoice" style="background:#fff; padding:20px; border-radius:10px; color:#000;">
         <h3 style="text-align:center; color:#11998e; margin-bottom:5px;">GLOBAL SUCCESS HUB - ORDER INVOICE</h3>
         <p style="text-align:center; font-size:11px; color:#555; margin-bottom:15px;">Store Billing & Product Purchase Sheet</p>
         <div class="summary-box">
@@ -561,7 +575,7 @@
 
       if (matchedIndex !== "") {
         addSelectedProductRow(matchedIndex);
-        inputField.val(""); // Clear search bar instantly
+        inputField.val("");
       } else {
         alert("Product nahi mila! Sahi code ya naam dalein.");
       }
@@ -630,13 +644,13 @@
 
       totalMrp += totMrp; 
       totalDp += totDp; 
-      totalPv += totPv; // FIXED: Added Total PV accumulation
+      totalPv += totPv;
     });
 
     $('#sumTotalMrp').text(totalMrp.toFixed(2));
     $('#sumTotalDp').text(totalDp.toFixed(2));
     $('#sumTotalMargin').text((totalMrp - totalDp).toFixed(2));
-    $('#sumTotalPv').text(totalPv.toFixed(2)); // FIXED: Updated Summary PV display
+    $('#sumTotalPv').text(totalPv.toFixed(2));
 
     let offerText = "";
     if (totalPv >= 25 && totalPv <= 299) {
@@ -648,15 +662,17 @@
     else $('#offerNotice').hide();
   }
 
+  // FIXED PDF Download Function (Proper rendering without blank issue)
   function downloadOrderPDF() {
     let element = document.getElementById('printableInvoice');
-    html2pdf().from(element).set({ 
-      margin: 0.3, 
-      filename: 'Global_Success_Hub_Invoice.pdf', 
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: true }, 
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } 
-    }).save();
+    let opt = {
+      margin:       0.3,
+      filename:     'Global_Success_Hub_Invoice.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+    };
+    html2pdf().from(element).set(opt).save();
   }
 
   function toggleProductsAccordion() {
